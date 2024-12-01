@@ -53,6 +53,7 @@ CREATE TABLE public.comments (
     id bigint NOT NULL,
     account_id public.citext NOT NULL,
     review_id bigint NOT NULL,
+    comment text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
@@ -76,47 +77,34 @@ ALTER TABLE public.comments ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE public.cookies (
-    id bigint NOT NULL,
+    id text NOT NULL,
     name text NOT NULL,
     year integer NOT NULL,
     description text NOT NULL,
-    image_url text NOT NULL,
-    predecessor_id bigint
+    image_url text
 );
 
 
 --
--- Name: cookies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: rankings; Type: TABLE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.cookies ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.cookies_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: likes; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.likes (
+CREATE TABLE public.rankings (
     id bigint NOT NULL,
     account_id public.citext NOT NULL,
-    review_id bigint NOT NULL,
+    cookie_id text NOT NULL,
+    year integer NOT NULL,
+    ranking integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
 --
--- Name: likes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: rankings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.likes ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.likes_id_seq
+ALTER TABLE public.rankings ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.rankings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -132,9 +120,9 @@ ALTER TABLE public.likes ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 CREATE TABLE public.reviews (
     id bigint NOT NULL,
     account_id public.citext NOT NULL,
-    cookie_id bigint NOT NULL,
+    cookie_id text NOT NULL,
     comment text,
-    ranking integer NOT NULL,
+    year integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
@@ -186,15 +174,31 @@ ALTER TABLE ONLY public.comments
 --
 
 ALTER TABLE ONLY public.cookies
-    ADD CONSTRAINT cookies_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT cookies_pkey PRIMARY KEY (id, year);
 
 
 --
--- Name: likes likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: rankings rankings_account_id_cookie_id_year_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.likes
-    ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.rankings
+    ADD CONSTRAINT rankings_account_id_cookie_id_year_key UNIQUE (account_id, cookie_id, year);
+
+
+--
+-- Name: rankings rankings_account_id_year_ranking_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rankings
+    ADD CONSTRAINT rankings_account_id_year_ranking_key UNIQUE (account_id, year, ranking);
+
+
+--
+-- Name: rankings rankings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rankings
+    ADD CONSTRAINT rankings_pkey PRIMARY KEY (id);
 
 
 --
@@ -230,14 +234,6 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- Name: cookies cookies_predecessor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.cookies
-    ADD CONSTRAINT cookies_predecessor_id_fkey FOREIGN KEY (predecessor_id) REFERENCES public.cookies(id) ON UPDATE CASCADE ON DELETE SET NULL;
-
-
---
 -- Name: reviews reviews_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -246,11 +242,11 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- Name: reviews reviews_cookie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: reviews reviews_cookie_id_year_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reviews
-    ADD CONSTRAINT reviews_cookie_id_fkey FOREIGN KEY (cookie_id) REFERENCES public.cookies(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT reviews_cookie_id_year_fkey FOREIGN KEY (cookie_id, year) REFERENCES public.cookies(id, year) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

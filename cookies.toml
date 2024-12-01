@@ -1,0 +1,23 @@
+[[cookies]]
+id = "pecan-snowball"
+year = 2024
+name = "Pecan Snowballs"
+description = "It's a snowball"
+
+[[cookies]]
+id = "spruce"
+year = 2024
+name = "Spruce Shortbread"
+description = "A shortbread with spruce tips flavour"
+
+[[cookies]]
+id = "cranberry-pistachio"
+year = 2024
+name = "Cranberry Pistachio Cookie"
+description = "Pearl's signature cranberry pistachio cookie"
+
+[[cookies]]
+id = "lemon-curd"
+year = 2024
+name = "Lemon Curd Stuffed Cookie"
+description = "Lemon curd is inside"
