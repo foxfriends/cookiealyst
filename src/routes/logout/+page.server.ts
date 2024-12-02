@@ -1,9 +1,7 @@
-import type { Account } from "$lib/Database";
-import { error, type Actions } from "@sveltejs/kit";
-import sql from "pg-sql2";
+import { type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
-  default: async ({ locals, request }) => {
+  default: async ({ locals }) => {
     locals.account = null;
     return {};
   },

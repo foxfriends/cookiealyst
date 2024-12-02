@@ -5,7 +5,7 @@
   import type { PageData } from "./$types";
 
   const { data }: { data: PageData } = $props();
-  const { cookie, rankings, reviews, account } = $derived(data);
+  const { cookie, account } = $derived(data);
 </script>
 
 <main>

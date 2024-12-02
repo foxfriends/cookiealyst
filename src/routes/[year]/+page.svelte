@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
   import Sheet from "$lib/components/Sheet.svelte";
   import type { PageData } from "./$types";
   import CookieInfo from "./CookieInfo.svelte";

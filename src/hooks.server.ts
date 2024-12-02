@@ -5,7 +5,7 @@ import { Database, type Session } from "$lib/Database";
 export async function handle({ event, resolve }: Parameters<Handle>[0]) {
   event.locals.database = await Database.connect();
 
-  let sessionId = event.cookies.get("session");
+  const sessionId = event.cookies.get("session");
   let session = null;
   if (sessionId) {
     session = await event.locals.database.one<Session>(

@@ -1,5 +1,5 @@
 import type { Comment, Cookie, Ranking, Review } from "$lib/Database";
-import { error, type ServerLoadEvent } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import type { PageServerLoadEvent } from "./$types";
 import sql from "pg-sql2";
 

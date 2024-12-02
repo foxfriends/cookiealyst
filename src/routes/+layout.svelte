@@ -2,10 +2,8 @@
   import { enhance } from "$app/forms";
   import type { Snippet } from "svelte";
   import type { LayoutData } from "./$types";
-  import type { ActionData } from "./login/$types";
 
-  const { children, data, form }: { children: Snippet; data: LayoutData; form: ActionData } =
-    $props();
+  const { children, data }: { children: Snippet; data: LayoutData } = $props();
 </script>
 
 <article class="account-status" role="status">
