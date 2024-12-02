@@ -1,13 +1,13 @@
 [[cookies]]
 id = "pecan-snowball"
 year = 2024
-name = "Pecan Snowballs"
+name = "Pecan Snowball"
 description = "It's a snowball!"
 
 [[cookies]]
-id = "spruce"
+id = "spruce-strawberry-thumb"
 year = 2024
-name = "Spruce Shortbread"
+name = "Spruce Strawberry Thumbprints"
 description = "A shortbread with spruce tips flavour"
 
 [[cookies]]
@@ -17,7 +17,19 @@ name = "Cranberry Pistachio Cookie"
 description = "Pearl's signature cranberry pistachio cookie, this cookie has a very long description so that we can test how it looks when there is quite a bit more text."
 
 [[cookies]]
-id = "lemon-curd"
+id = "lemon-curd-stuffed"
 year = 2024
 name = "Lemon Curd Stuffed Cookie"
 description = "Lemon curd is inside"
+
+[[cookies]]
+id = "rye-chocolate-hazelnut-praline"
+year = 2024
+name = "Rye Chocolate Chip Cookie with Hazelnut Praline"
+description = "A hearty chocolate chip cookie, with roasted hazelnut praline"
+
+[[cookies]]
+id = "apple-caramel-sandwich"
+year = 2024
+name = "Apple Caramel Sandwich Cookie"
+description = "Apple-cider infused caramel sandwiched between apple-infused shortbread cookies"
