@@ -5,9 +5,10 @@
   import InfoSection from "./InfoSection.svelte";
   import type { PageData } from "./$types";
   import Button from "$lib/components/Button.svelte";
+  import Review from "./Review.svelte";
 
   const { data }: { data: PageData } = $props();
-  const { cookie, account } = $derived(data);
+  const { cookie, reviews, account } = $derived(data);
 </script>
 
 <main>
@@ -21,16 +22,17 @@
 
       <hr />
 
-      <form action="/review" method="POST" use:enhance>
-        <input name="cookie_id" value={cookie.id} type="hidden" />
-        <input name="year" value={cookie.year} type="hidden" />
-
+      <form action="?/review" method="POST" use:enhance>
         <textarea name="comment" rows={4} placeholder="Leave a review"></textarea>
         <div class="actions">
           {#if !account}<p class="note">You must be signed in to leave a review</p>{/if}
           <Button disabled={!account}>Submit</Button>
         </div>
       </form>
+
+      {#each reviews as review}
+        <Review {review} {account} />
+      {/each}
     </div>
   </Sheet>
 </main>
@@ -68,7 +70,7 @@
   form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
   }
 
   textarea {
