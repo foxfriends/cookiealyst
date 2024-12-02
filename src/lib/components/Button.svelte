@@ -24,8 +24,7 @@
   }
 
   button.compact {
-    border-color: transparent;
-    padding: 0 0.5rem;
+    padding: 0 0.25rem;
     font-size: 0.75rem;
   }
 
@@ -35,5 +34,10 @@
 
   button:not(:disabled) {
     cursor: pointer;
+    color: rgb(0 0 0);
+  }
+
+  button:disabled {
+    color: rgb(0 0 0 / 0.45);
   }
 </style>

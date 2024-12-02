@@ -58,7 +58,13 @@
   .account-status {
     max-width: 60rem;
     margin: 1rem auto;
-    padding: 0 6rem;
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 600px) {
+    .account-status {
+      padding: 0 6rem;
+    }
   }
 
   form {

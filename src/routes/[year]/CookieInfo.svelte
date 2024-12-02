@@ -32,14 +32,24 @@
 
 <style>
   section {
-    display: grid;
-    grid-template-columns: subgrid;
-    grid-auto-rows: auto;
-    grid-column-start: 1;
-    grid-column-end: -1;
-    gap: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1rem;
     cursor: pointer;
     margin: 0 auto;
+    width: 100%;
+    grid-column-start: 1;
+    grid-column-end: -1;
+  }
+
+  @container (min-width: 400px) {
+    section {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-auto-rows: auto;
+      align-items: center;
+    }
   }
 
   div {
@@ -47,15 +57,13 @@
     flex-direction: column;
     gap: 0.5rem;
     flex-grow: 1;
-    align-self: center;
   }
 
   picture {
     aspect-ratio: 1 / 1;
-    width: 200px;
-    height: 200px;
+    width: 12.5rem;
+    height: 12.5rem;
     background-color: rgb(0 0 0 / 0.05);
-    place-self: center;
   }
 
   img {

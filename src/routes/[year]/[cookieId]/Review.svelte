@@ -87,6 +87,7 @@
     background: rgb(255 255 255 / 0.7);
     border: 1px solid rgb(0 0 0 / 0.12);
     padding: 1rem;
+    resize: vertical;
   }
 
   .actions {

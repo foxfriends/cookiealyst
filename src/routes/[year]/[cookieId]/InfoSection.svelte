@@ -32,11 +32,11 @@
 
   picture {
     aspect-ratio: 1 / 1;
-    min-width: 200px;
+    min-width: 12.5rem;
     width: 100%;
-    max-width: 400px;
+    max-width: 25rem;
     background-color: rgb(0 0 0 / 0.05);
-    place-self: center;
+    align-self: center;
   }
 
   img {
