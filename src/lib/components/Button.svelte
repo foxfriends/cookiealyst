@@ -1,0 +1,39 @@
+<script lang="ts">
+  import type { HTMLButtonAttributes } from "svelte/elements";
+
+  const {
+    children,
+    compact = false,
+    ...props
+  }: { compact?: boolean } & HTMLButtonAttributes = $props();
+</script>
+
+<button class:compact {...props}>{@render children?.()}</button>
+
+<style>
+  button {
+    border: 1px solid rgb(0 0 0 / 0.25);
+    border-radius: 2px;
+    padding: 0.25rem 1rem;
+    background: none;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    outline: none;
+  }
+
+  button.compact {
+    border-color: transparent;
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  button:not(:disabled):where(:hover, :focus) {
+    border-color: rgb(0 0 0 / 0.75);
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+</style>

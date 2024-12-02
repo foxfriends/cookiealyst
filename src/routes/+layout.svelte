@@ -2,6 +2,7 @@
   import { enhance } from "$app/forms";
   import type { Snippet } from "svelte";
   import type { LayoutData } from "./$types";
+  import Button from "$lib/components/Button.svelte";
 
   const { children, data }: { children: Snippet; data: LayoutData } = $props();
 </script>
@@ -9,15 +10,17 @@
 <article class="account-status" role="status">
   {#if data.account}
     <form action="/logout" method="POST" use:enhance>
-      <p>Welcome, {data.account}!</p>
-      <button>Sign out</button>
+      <p class="prompt">
+        Welcome, <span style="text-transform: none; font-weight: 600">{data.account}</span>!
+      </p>
+      <Button compact>Sign out</Button>
     </form>
   {:else}
     <form action="/login" method="POST" use:enhance>
-      <label for="account_id">Enter your name to rank and review</label>
+      <label class="prompt" for="account_id">Enter your name to rank and review</label>
       <div class="field">
         <input id="account_id" name="account_id" placeholder="NAME" required />
-        <button>Sign in</button>
+        <Button compact>Sign in</Button>
       </div>
     </form>
   {/if}
@@ -30,7 +33,6 @@
     * {
       padding: 0;
       margin: 0;
-      font-size: 1rem;
       box-sizing: border-box;
       font-family: var(--font-body);
       font-weight: 400;
@@ -76,7 +78,7 @@
     flex-wrap: wrap;
   }
 
-  label {
+  .prompt {
     text-transform: uppercase;
     font-size: 0.75rem;
     font-weight: 500;
@@ -93,16 +95,5 @@
     outline: none;
     font-size: 0.75rem;
     font-weight: 500;
-  }
-
-  button {
-    border: none;
-    padding: 0 0.5rem;
-    background: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 600;
-    flex-shrink: 0;
   }
 </style>

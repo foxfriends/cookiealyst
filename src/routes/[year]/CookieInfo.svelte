@@ -84,12 +84,12 @@
     text-transform: lowercase;
   }
 
-  section:where(:hover, :has(:focus)) a {
+  section:where(:hover, :has(:focus-visible)) a {
     text-decoration: underline;
     text-underline-offset: 0.35rem;
   }
 
-  section:has(:focus) {
+  section:has(:focus-visible) {
     box-shadow: 0 0 0.45rem rgb(0 0 0 / 0.4);
   }
 </style>

@@ -2,7 +2,9 @@
   import { enhance } from "$app/forms";
   import Icon from "$lib/components/Icon.svelte";
   import Sheet from "$lib/components/Sheet.svelte";
+  import InfoSection from "./InfoSection.svelte";
   import type { PageData } from "./$types";
+  import Button from "$lib/components/Button.svelte";
 
   const { data }: { data: PageData } = $props();
   const { cookie, account } = $derived(data);
@@ -10,28 +12,26 @@
 
 <main>
   <Sheet>
-    <nav>
-      <a href="/"><Icon>west</Icon> Tasting Menu 2024</a>
-    </nav>
+    <div class="page">
+      <nav>
+        <a href="/"><Icon>west</Icon> Tasting Menu 2024</a>
+      </nav>
 
-    <div class="info-grid" data-cookie={data.cookie.id}>
-      <picture>
-        <img src={cookie.image_url} alt="Photo of {cookie.name}" width="400" />
-      </picture>
-      <section>
-        <heading>
-          <h1>{cookie.name}</h1>
-        </heading>
-        <p>{cookie.description}</p>
-      </section>
+      <InfoSection {cookie} />
+
+      <hr />
+
+      <form action="/review" method="POST" use:enhance>
+        <input name="cookie_id" value={cookie.id} type="hidden" />
+        <input name="year" value={cookie.year} type="hidden" />
+
+        <textarea name="comment" rows={4} placeholder="Leave a review"></textarea>
+        <div class="actions">
+          {#if !account}<p class="note">You must be signed in to leave a review</p>{/if}
+          <Button disabled={!account}>Submit</Button>
+        </div>
+      </form>
     </div>
-
-    <form action="/review" method="POST" use:enhance>
-      <input name="cookie_id" value={cookie.id} type="hidden" />
-      <input name="year" value={cookie.year} type="hidden" />
-
-      <button disabled={!account}>Submit</button>
-    </form>
   </Sheet>
 </main>
 
@@ -41,54 +41,10 @@
     margin: 0 auto;
   }
 
-  .info-grid {
-    display: grid;
-    grid-template-columns: auto;
-    grid-auto-rows: auto;
-    gap: 0 1rem;
-  }
-
-  @container (min-width: 600px) {
-    .info-grid {
-      grid-template-columns: minmax(auto, 1fr) 1fr;
-    }
-  }
-
-  picture {
-    aspect-ratio: 1 / 1;
-    min-width: 200px;
-    width: 100%;
-    max-width: 400px;
-    background-color: rgb(0 0 0 / 0.05);
-    place-self: center;
-  }
-
-  img {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-  }
-
-  section {
-    padding: 1rem;
+  .page {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    align-self: center;
-  }
-
-  h1 {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 3rem;
-    text-transform: lowercase;
-  }
-
-  p {
-    text-transform: lowercase;
+    gap: 2rem;
   }
 
   a {
@@ -98,12 +54,40 @@
     text-transform: lowercase;
   }
 
-  a:hover {
+  a:where(:hover, :focus) {
     text-decoration: underline;
     text-underline-offset: 0.35rem;
   }
 
-  nav {
-    margin-bottom: 2rem;
+  hr {
+    width: 75%;
+    margin: 0 auto;
+    border: 1px solid rgb(0 0 0 / 0.12);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  textarea {
+    background: rgb(255 255 255 / 0.7);
+    border: 1px solid rgb(0 0 0 / 0.12);
+    padding: 1rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: end;
+    align-items: center;
+  }
+
+  .note {
+    color: rgb(0 0 0 / 0.7);
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 </style>
