@@ -57,6 +57,7 @@ export interface Session {
   id: string;
   account_id: string;
   created_at: Date;
+  expires_at: Date;
 }
 
 export interface Review {

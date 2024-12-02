@@ -15,6 +15,7 @@ database_name := if DATABASE_URL != "" { file_stem(DATABASE_URL) } else { "" }
 shadow_database_name := if SHADOW_DATABASE_URL != "" { file_stem(SHADOW_DATABASE_URL) } else { "" }
 
 dev: up
+    NODE_ENV=development npx svelte-kit sync
     npx concurrently --names "sveltekit,migrate" \
         "npx vite dev --host" \
         "npx graphile-migrate watch"
@@ -42,8 +43,8 @@ stop:
     docker compose stop
 
 build:
-    npx svelte-kit sync
-    npx vite build
+    NODE_ENV=production npx svelte-kit sync
+    NODE_ENV=production npx vite build
 
 clean:
     rm -rf .svelte-kit build .eslintcache
@@ -63,6 +64,9 @@ migrate:
 migration:
     npx prettier migrations -w
     npx graphile-migrate commit
+
+unmigration:
+    npx graphile-migrate uncommit
 
 _pre-commit:
     npx graphile-migrate status

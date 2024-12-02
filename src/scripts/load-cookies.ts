@@ -9,19 +9,20 @@ const db = await Database.connect();
 
 const values = sql.join(
   cookies.map(
-    (cookie) =>
-      sql.query`(${sql.value(cookie.id)}, ${sql.value(cookie.name)}, ${sql.value(cookie.description)}, ${sql.value(cookie.year)}, ${sql.value(cookie.image_url)})`,
+    (cookie, i) =>
+      sql.query`(${sql.value(cookie.id)}, ${sql.value(cookie.name)}, ${sql.value(cookie.description)}, ${sql.value(cookie.year)}, ${sql.value(cookie.image_url)}, ${sql.value(i)})`,
   ),
   ",",
 );
 
 const result = await db.query(sql.query`
-  INSERT INTO cookies (id, name, description, year, image_url)
+  INSERT INTO cookies (id, name, description, year, image_url, ordering)
     VALUES ${values}
     ON CONFLICT (id, year) DO UPDATE
       SET name = EXCLUDED.name,
           description = EXCLUDED.description,
-          image_url = EXCLUDED.image_url
+          image_url = EXCLUDED.image_url,
+          ordering = EXCLUDED.ordering
 `);
 
 console.log(`${result.rowCount} cookies updated`);

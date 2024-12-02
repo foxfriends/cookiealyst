@@ -2,7 +2,7 @@
 id = "pecan-snowball"
 year = 2024
 name = "Pecan Snowballs"
-description = "It's a snowball"
+description = "It's a snowball!"
 
 [[cookies]]
 id = "spruce"
@@ -14,7 +14,7 @@ description = "A shortbread with spruce tips flavour"
 id = "cranberry-pistachio"
 year = 2024
 name = "Cranberry Pistachio Cookie"
-description = "Pearl's signature cranberry pistachio cookie"
+description = "Pearl's signature cranberry pistachio cookie, this cookie has a very long description so that we can test how it looks when there is quite a bit more text."
 
 [[cookies]]
 id = "lemon-curd"

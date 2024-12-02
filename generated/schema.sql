@@ -81,6 +81,7 @@ CREATE TABLE public.cookies (
     name text NOT NULL,
     year integer NOT NULL,
     description text NOT NULL,
+    ordering integer NOT NULL,
     image_url text
 );
 
@@ -147,7 +148,7 @@ ALTER TABLE public.reviews ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 CREATE TABLE public.sessions (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    account_id public.citext NOT NULL,
+    account_id public.citext,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     expires_at timestamp with time zone DEFAULT (now() + '30 days'::interval) NOT NULL
 );
@@ -175,6 +176,14 @@ ALTER TABLE ONLY public.comments
 
 ALTER TABLE ONLY public.cookies
     ADD CONSTRAINT cookies_pkey PRIMARY KEY (id, year);
+
+
+--
+-- Name: cookies cookies_year_ordering_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cookies
+    ADD CONSTRAINT cookies_year_ordering_key UNIQUE (year, ordering);
 
 
 --
@@ -254,7 +263,7 @@ ALTER TABLE ONLY public.reviews
 --
 
 ALTER TABLE ONLY public.sessions
-    ADD CONSTRAINT sessions_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT sessions_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
