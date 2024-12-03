@@ -8,6 +8,10 @@
   const { data }: { data: PageData } = $props();
 
   let voteCaster: VoteCaster | undefined = $state();
+  const rankedIds = $derived(data.rankings.map((ranking) => ranking.cookie_id));
+  const rankedCookies = $derived(
+    data.cookies.toSorted((a, b) => rankedIds.indexOf(a.id) - rankedIds.indexOf(b.id)),
+  );
 
   function showVoteCaster() {
     voteCaster?.show();
@@ -22,7 +26,12 @@
       </header>
 
       <div class="cast">
-        <Button onclick={showVoteCaster} disabled={!data.account}>Cast your votes</Button>
+        {#if data.rankings.length}
+          <p class="prompt">Thank you for voting.</p>
+        {/if}
+        <Button onclick={showVoteCaster} disabled={!data.account}>
+          {#if data.rankings.length}Change your votes{:else}Cast your votes{/if}
+        </Button>
       </div>
 
       <div role="list" class="list-grid">
@@ -36,7 +45,7 @@
   </Sheet>
 </main>
 
-<VoteCaster bind:this={voteCaster} cookies={data.cookies} />
+<VoteCaster bind:this={voteCaster} cookies={rankedCookies} />
 
 <style>
   main {
@@ -66,5 +75,14 @@
 
   .cast {
     align-self: center;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .prompt {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 </style>

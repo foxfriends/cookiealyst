@@ -35,6 +35,18 @@ export class Database {
     return result.rows as T[];
   }
 
+  async transaction<T>(cb: () => Promise<T>): Promise<T> {
+    await this.client.query("BEGIN");
+    try {
+      const result = await cb();
+      await this.client.query("COMMIT");
+      return result;
+    } catch (err) {
+      await this.client.query("ROLLBACK");
+      throw err;
+    }
+  }
+
   release() {
     this.client.release();
   }

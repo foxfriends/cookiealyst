@@ -29,8 +29,8 @@ export async function handle({ event, resolve }: Parameters<Handle>[0]) {
     path: "/",
     expires: session.expires_at,
     httpOnly: true,
-    sameSite: "lax",
-    secure: true,
+    sameSite: "none",
+    secure: false,
   });
 
   try {

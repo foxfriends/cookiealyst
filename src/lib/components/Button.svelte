@@ -4,11 +4,12 @@
   const {
     children,
     compact = false,
+    icon = false,
     ...props
-  }: { compact?: boolean } & HTMLButtonAttributes = $props();
+  }: { compact?: boolean; icon?: boolean } & HTMLButtonAttributes = $props();
 </script>
 
-<button class:compact {...props}>{@render children?.()}</button>
+<button class:compact class:icon {...props}>{@render children?.()}</button>
 
 <style>
   button {
@@ -28,13 +29,27 @@
     font-size: 0.75rem;
   }
 
-  button:not(:disabled):where(:hover, :focus) {
+  button.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 1.5rem;
+    aspect-ratio: 1 / 1;
+  }
+
+  button.icon.compact {
+    border-color: transparent;
+  }
+
+  button:not(:disabled):where(:hover, :focus-visible),
+  button.icon.compact:not(:disabled):where(:hover, :focus-visible) {
     border-color: rgb(0 0 0 / 0.75);
   }
 
   button:not(:disabled) {
     cursor: pointer;
-    color: rgb(0 0 0);
+    color: inherit;
   }
 
   button:disabled {
