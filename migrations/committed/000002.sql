@@ -1,0 +1,5 @@
+--! Previous: sha1:2f544d9a612fe13acf506919fec43be4bc2d5dec
+--! Hash: sha1:f13230e6433a096866618e1cf38041772c96b01c
+
+ALTER TABLE comments DROP CONSTRAINT IF EXISTS comments_review_id_fkey;
+ALTER TABLE comments ADD FOREIGN KEY (review_id) REFERENCES reviews (id) ON DELETE CASCADE ON UPDATE CASCADE;

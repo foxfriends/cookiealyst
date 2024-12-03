@@ -1,2 +1,1 @@
-ALTER TABLE comments DROP CONSTRAINT IF EXISTS comments_review_id_fkey;
-ALTER TABLE comments ADD FOREIGN KEY (review_id) REFERENCES reviews (id) ON DELETE CASCADE ON UPDATE CASCADE;
+-- Enter migration here
