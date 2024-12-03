@@ -239,7 +239,7 @@ ALTER TABLE ONLY public.comments
 --
 
 ALTER TABLE ONLY public.comments
-    ADD CONSTRAINT comments_review_id_fkey FOREIGN KEY (review_id) REFERENCES public.comments(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT comments_review_id_fkey FOREIGN KEY (review_id) REFERENCES public.reviews(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

@@ -96,10 +96,12 @@
     flex-direction: row;
     gap: 0.5rem;
     align-items: center;
+    justify-content: space-between;
     background-color: rgb(255 255 255);
     border: 1px solid rgb(0 0 0 / 0.12);
     height: 1.5rem;
-    padding: 0.25rem;
+    width: 7ch;
+    padding: 0.25rem 0.5rem;
     border-radius: 0.75rem;
   }
 
@@ -133,6 +135,7 @@
     text-decoration: none;
     outline: none;
     text-transform: lowercase;
+    margin-top: 1rem;
   }
 
   section:where(:hover, :has(:focus-visible)) a {
