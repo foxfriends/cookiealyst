@@ -2,8 +2,13 @@
   import { goto } from "$app/navigation";
   import Icon from "$lib/components/Icon.svelte";
   import type { Cookie } from "$lib/Database";
+  import { ordinal } from "$lib/ordinal";
 
-  const { cookie }: { cookie: Cookie } = $props();
+  const {
+    cookie,
+    personalRank,
+    publicRank,
+  }: { cookie: Cookie; personalRank: number; publicRank: number } = $props();
 
   function view() {
     void goto(`/${cookie.year}/${cookie.id}`);
@@ -13,15 +18,25 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <section data-cookie={cookie.id} onclick={view} role="listitem">
-  <picture>
-    <img
-      src={cookie.image_url}
-      alt="Photo of &ldquo;{cookie.name}&rdquo;"
-      height="200"
-      width="200"
-    />
-  </picture>
-  <div>
+  <div class="picture">
+    <div class="ranks">
+      {#if publicRank > 0}
+        <div class="rank"><Icon>public</Icon> {ordinal(publicRank)}</div>
+      {/if}
+      {#if personalRank > 0}
+        <div class="rank"><Icon>person</Icon> {ordinal(personalRank)}</div>
+      {/if}
+    </div>
+    <picture>
+      <img
+        src={cookie.image_url}
+        alt="Photo of &ldquo;{cookie.name}&rdquo;"
+        height="200"
+        width="200"
+      />
+    </picture>
+  </div>
+  <div class="content">
     <heading>
       <h2>{cookie.name}</h2>
     </heading>
@@ -52,17 +67,45 @@
     }
   }
 
-  div {
+  .content {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     flex-grow: 1;
   }
 
-  picture {
+  .picture {
+    position: relative;
     aspect-ratio: 1 / 1;
     width: 12.5rem;
     height: 12.5rem;
+  }
+
+  .ranks {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    z-index: 1;
+    gap: 0.5rem;
+    inset: 0.5rem;
+  }
+
+  .rank {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    background-color: rgb(255 255 255);
+    border: 1px solid rgb(0 0 0 / 0.12);
+    height: 1.5rem;
+    padding: 0.25rem;
+    border-radius: 0.75rem;
+  }
+
+  picture {
+    inset: 0;
+    position: absolute;
     background-color: rgb(0 0 0 / 0.05);
   }
 

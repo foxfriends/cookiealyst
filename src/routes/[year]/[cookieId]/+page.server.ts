@@ -66,9 +66,13 @@ export const actions: Actions = {
     const accountId = locals.account;
     if (!accountId) return fail(400, { message: "Not logged in" });
     const body = await request.formData();
-    const reviewId = body.get("review_id")?.toString();
-    const text = body.get("comment")?.toString();
+
+    const reviewIdString = body.get("review_id")?.toString();
+    if (!reviewIdString) return fail(400, { message: "Review ID is required" });
+    const reviewId = Number.parseInt(reviewIdString);
     if (!reviewId) return fail(400, { message: "Review ID is required" });
+
+    const text = body.get("comment")?.toString();
     if (!text) return fail(400, { message: "Comment is required" });
     const comment = await locals.database.one<Review>(
       sql.query`

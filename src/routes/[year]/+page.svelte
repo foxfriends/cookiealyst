@@ -36,7 +36,7 @@
 
       <div role="list" class="list-grid">
         {#each data.cookies as cookie (cookie.id)}
-          <CookieInfo {cookie} />
+          <CookieInfo {cookie} personalRank={rankedIds.indexOf(cookie.id) + 1} publicRank={-1} />
         {:else}
           <div>The cookies are not yet made.</div>
         {/each}

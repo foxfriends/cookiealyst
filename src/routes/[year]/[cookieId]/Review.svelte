@@ -1,9 +1,17 @@
 <script lang="ts">
   import Button from "$lib/components/Button.svelte";
-  import type { Comment, Review } from "$lib/Database";
+  import type { Comment, Ranking, Review } from "$lib/Database";
+  import { ordinal } from "$lib/ordinal";
 
-  const { review, account }: { review: Review & { comments: Comment[] }; account?: string | null } =
+  const {
+    review,
+    account,
+    rankings,
+  }: { review: Review & { comments: Comment[] }; rankings: Ranking[]; account?: string | null } =
     $props();
+
+  const authorRanking = rankings.find((ranking) => ranking.account_id === review.account_id);
+
   const date = new Intl.DateTimeFormat("en-CA", {
     dateStyle: "medium",
     timeStyle: "short",
@@ -19,6 +27,9 @@
   <div class="review">
     <p class="meta">
       <strong>{review.account_id}</strong>
+      {#if authorRanking}
+        ranks this cookie <strong>{ordinal(authorRanking.ranking + 1)}</strong>
+      {/if}
       at
       {date.format(review.created_at)}
     </p>
@@ -26,9 +37,13 @@
   </div>
 
   {#each review.comments as comment (comment.id)}
+    {@const ranking = rankings.find((ranking) => ranking.account_id === comment.account_id)}
     <div class="comment">
       <p class="meta">
         <strong>{comment.account_id}</strong>
+        {#if ranking}
+          ranks this cookie <strong>{ordinal(ranking.ranking + 1)}</strong>
+        {/if}
         at
         {date.format(new Date(comment.created_at))}
       </p>

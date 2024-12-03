@@ -8,7 +8,7 @@
   import Review from "./Review.svelte";
 
   const { data }: { data: PageData } = $props();
-  const { cookie, reviews, account } = $derived(data);
+  const { cookie, reviews, account, rankings } = $derived(data);
 </script>
 
 <main>
@@ -31,7 +31,7 @@
       </form>
 
       {#each reviews as review}
-        <Review {review} {account} />
+        <Review {review} {account} {rankings} />
       {/each}
     </div>
   </Sheet>

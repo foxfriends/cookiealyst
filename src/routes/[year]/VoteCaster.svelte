@@ -1,7 +1,5 @@
 <script lang="ts">
   import type { Cookie } from "$lib/Database";
-  import { SvelteMap } from "svelte/reactivity";
-  import CookieInfo from "./CookieInfo.svelte";
   import Icon from "$lib/components/Icon.svelte";
   import Button from "$lib/components/Button.svelte";
 
