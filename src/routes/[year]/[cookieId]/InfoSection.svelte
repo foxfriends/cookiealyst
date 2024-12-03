@@ -4,24 +4,24 @@
   const { cookie }: { cookie: Cookie } = $props();
 </script>
 
-<div class="info-grid" data-cookie={cookie.id}>
+<section class="info-grid" data-cookie={cookie.id}>
   <picture>
     <img src={cookie.image_url} alt="Photo of {cookie.name}" width="400" />
   </picture>
-  <section>
+  <div class="info">
     <heading>
       <h1>{cookie.name}</h1>
     </heading>
     <p>{cookie.description}</p>
-  </section>
-</div>
+  </div>
+</section>
 
 <style>
   .info-grid {
     display: grid;
     grid-template-columns: auto;
     grid-auto-rows: auto;
-    gap: 0 1rem;
+    gap: 1rem;
   }
 
   @container (min-width: 600px) {
@@ -48,8 +48,7 @@
     height: 100%;
   }
 
-  section {
-    padding: 1rem;
+  .info {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;

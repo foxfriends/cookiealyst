@@ -1,7 +1,6 @@
 <script lang="ts">
   import Button from "$lib/components/Button.svelte";
   import Sheet from "$lib/components/Sheet.svelte";
-  import { Kemeny, utils } from "votes";
   import type { PageData } from "./$types";
   import CookieInfo from "./CookieInfo.svelte";
   import VoteCaster from "./VoteCaster.svelte";
@@ -12,20 +11,6 @@
   import type { Cookie } from "$lib/Database";
 
   const { data }: { data: PageData } = $props();
-
-  const publicRanks = $derived.by(() => {
-    if (!data.publicRankings.length) return [];
-    const matrix = new Kemeny(
-      utils.matrixFromBallots(
-        data.publicRankings.map(({ rankings }) => ({
-          ranking: rankings.map((ranking) => [ranking.cookie_id]),
-          weight: 1,
-        })),
-        data.cookies.map((cookie) => cookie.id),
-      ),
-    );
-    return matrix.ranking().flat();
-  });
 
   let voteCaster: VoteCaster | undefined = $state();
   const rankedIds = $derived(data.rankings.map((ranking) => ranking.cookie_id));
@@ -55,7 +40,7 @@
       case "personal":
         return rankedIds.indexOf(a.id) - rankedIds.indexOf(b.id);
       case "public":
-        return publicRanks.indexOf(a.id) - publicRanks.indexOf(b.id);
+        return data.publicRankings.indexOf(a.id) - data.publicRankings.indexOf(b.id);
     }
   }
 
@@ -114,7 +99,7 @@
             <CookieInfo
               {cookie}
               personalRank={rankedIds.indexOf(cookie.id) + 1}
-              publicRank={publicRanks.indexOf(cookie.id) + 1}
+              publicRank={data.publicRankings.indexOf(cookie.id) + 1}
             />
           {:else}
             <div>The cookies are not yet made.</div>

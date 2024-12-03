@@ -3,6 +3,7 @@ import sql from "pg-sql2";
 import type { PageServerLoadEvent, Actions } from "./$types";
 import qs from "qs";
 import { error, fail } from "@sveltejs/kit";
+import { getPublicRanking } from "$lib/publicRanking";
 
 export async function load(event: PageServerLoadEvent) {
   const year = Number.parseInt(event.params.year);
@@ -12,28 +13,13 @@ export async function load(event: PageServerLoadEvent) {
   );
 
   let rankings: Ranking[] = [];
-  let publicRankings: { account_id: string; rankings: Ranking[] }[] = [];
+  let publicRankings: string[] = [];
   if (event.locals.account) {
     rankings = await event.locals.database.many<Ranking>(
       sql.query`SELECT * FROM rankings WHERE year = ${sql.value(year)} AND account_id = ${sql.value(event.locals.account)}`,
     );
     if (rankings.length) {
-      publicRankings = await event.locals.database.many<{
-        account_id: string;
-        rankings: Ranking[];
-      }>(
-        sql.query`
-          SELECT a.id, jsonb_agg(r.*) AS rankings
-            FROM accounts a
-            JOIN LATERAL (
-              SELECT cookie_id, ranking
-                FROM rankings
-                WHERE account_id = a.id
-                AND year = ${sql.value(year)}
-                ORDER BY ranking
-            ) r ON true
-            GROUP BY a.id`,
-      );
+      publicRankings = await getPublicRanking(event.locals.database, year);
     }
   }
   return { cookies, year, rankings, publicRankings };

@@ -2,6 +2,7 @@ import type { Comment, Cookie, Ranking, Review } from "$lib/Database";
 import { error, fail } from "@sveltejs/kit";
 import type { PageServerLoadEvent, Actions } from "./$types";
 import sql from "pg-sql2";
+import { getPublicRanking } from "$lib/publicRanking";
 
 export async function load(event: PageServerLoadEvent) {
   const { cookieId } = event.params;
@@ -35,11 +36,25 @@ export async function load(event: PageServerLoadEvent) {
     }));
   }
 
-  const rankings = await event.locals.database.many<Ranking>(
-    sql.query`SELECT * FROM rankings WHERE rankings.cookie_id = ${sql.value(cookieId)}`,
-  );
+  let rankings: Ranking[] = [];
+  let publicRanking: string[] = [];
 
-  return { cookie, reviews, rankings };
+  if (event.locals.account) {
+    const allRankings = await event.locals.database.many<Ranking>(
+      sql.query`
+        SELECT *
+          FROM rankings
+          WHERE rankings.cookie_id = ${sql.value(cookieId)}
+          AND rankings.year = ${sql.value(year)}
+          ORDER BY created_at ASC
+      `,
+    );
+    if (allRankings.some((rank) => rank.account_id === event.locals.account)) {
+      rankings = allRankings;
+      publicRanking = await getPublicRanking(event.locals.database, year);
+    }
+  }
+  return { cookie, reviews, rankings, publicRanking };
 }
 
 export const actions: Actions = {
