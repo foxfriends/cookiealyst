@@ -8,6 +8,8 @@
   import { enhance } from "$app/forms";
   import Input from "$lib/components/Input.svelte";
   import Prompt from "$lib/components/Prompt.svelte";
+  import Icon from "$lib/components/Icon.svelte";
+  import type { Cookie } from "$lib/Database";
 
   const { data }: { data: PageData } = $props();
 
@@ -34,6 +36,30 @@
   function showVoteCaster() {
     voteCaster?.show();
   }
+
+  const orderings = ["default", "personal", "public"] as const;
+  let ordering: (typeof orderings)[number] = $state("default");
+  $effect(() => {
+    if (!data.account) ordering = "default";
+  });
+
+  function nextOrdering() {
+    const index = orderings.indexOf(ordering);
+    ordering = orderings[(index + 1) % orderings.length];
+  }
+
+  function orderingFunction(a: Cookie, b: Cookie) {
+    switch (ordering) {
+      case "default":
+        return a.ordering - b.ordering;
+      case "personal":
+        return rankedIds.indexOf(a.id) - rankedIds.indexOf(b.id);
+      case "public":
+        return publicRanks.indexOf(a.id) - publicRanks.indexOf(b.id);
+    }
+  }
+
+  const orderedCookies = $derived(data.cookies.toSorted(orderingFunction));
 </script>
 
 <main>
@@ -65,16 +91,35 @@
         {/if}
       </div>
 
-      <div role="list" class="list-grid">
-        {#each data.cookies as cookie (cookie.id)}
-          <CookieInfo
-            {cookie}
-            personalRank={rankedIds.indexOf(cookie.id) + 1}
-            publicRank={publicRanks.indexOf(cookie.id) + 1}
-          />
-        {:else}
-          <div>The cookies are not yet made.</div>
-        {/each}
+      <div class="list-area">
+        <div class="controls">
+          {#if !data.rankings.length}
+            <Prompt>You can see the global rankings after voting.</Prompt>
+          {/if}
+          <Button onclick={nextOrdering} disabled={!data.rankings.length}>
+            <div class="ordering">
+              {#if ordering === "personal"}
+                <Icon>person</Icon> Personal rank
+              {:else if ordering === "public"}
+                <Icon>public</Icon> Public rank
+              {:else}
+                <Icon>list</Icon> Default
+              {/if}
+              <Icon>keyboard_arrow_down</Icon>
+            </div>
+          </Button>
+        </div>
+        <div role="list" class="list-grid">
+          {#each orderedCookies as cookie (cookie.id)}
+            <CookieInfo
+              {cookie}
+              personalRank={rankedIds.indexOf(cookie.id) + 1}
+              publicRank={publicRanks.indexOf(cookie.id) + 1}
+            />
+          {:else}
+            <div>The cookies are not yet made.</div>
+          {/each}
+        </div>
       </div>
     </div>
   </Sheet>
@@ -102,6 +147,12 @@
     gap: 4rem 0;
   }
 
+  .list-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
   .page {
     display: flex;
     flex-direction: column;
@@ -114,5 +165,20 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 1rem;
+    justify-content: end;
+  }
+
+  .ordering {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
   }
 </style>

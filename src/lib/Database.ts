@@ -59,6 +59,7 @@ export interface Cookie {
   description: string;
   year: number;
   image_url: string | null;
+  ordering: number;
 }
 
 export interface Account {
