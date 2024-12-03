@@ -2,6 +2,7 @@
   import type { Cookie } from "$lib/Database";
   import Icon from "$lib/components/Icon.svelte";
   import Button from "$lib/components/Button.svelte";
+  import { flip } from "svelte/animate";
 
   const { cookies }: { cookies: Cookie[] } = $props();
 
@@ -23,6 +24,83 @@
     ordered.splice(index, 1);
     ordered.splice(index + 1, 0, cookie);
   }
+
+  let dragTarget: string | undefined = $state();
+  let mouseDragging = $state(false);
+  let touchDragging: Touch | null = $state(null);
+  let draggedY = $state(0);
+
+  function reorderCookies(cookieId: string | undefined) {
+    if (!cookieId) return;
+    const draggingElement = dialog!.querySelector(`[data-cookie='${cookieId}']`);
+    if (!draggingElement) return;
+    const { top, height } = draggingElement.getBoundingClientRect();
+    const dropY = top + height / 2;
+    const droppedBefore = Array.from(dialog!.querySelectorAll("[data-cookie]"))
+      .filter((element) => element instanceof HTMLDivElement)
+      .filter((element) => element.dataset.cookie && element.dataset.cookie !== cookieId)
+      .find((element) => {
+        const { top, height } = element.getBoundingClientRect();
+        const y = top + height / 2;
+        return y > dropY;
+      });
+    const oldIndex = ordered.findIndex((cookie) => cookie.id === cookieId);
+    const [cookie] = ordered.splice(oldIndex, 1);
+    const newIndex = droppedBefore
+      ? ordered.findIndex((cookie) => cookie.id === droppedBefore.dataset.cookie)
+      : ordered.length;
+    ordered.splice(newIndex, 0, cookie);
+  }
+
+  function onmousedown(event: MouseEvent & { currentTarget: HTMLDivElement }) {
+    mouseDragging = true;
+    dragTarget = (event.currentTarget.closest(".ballot")! as HTMLDivElement).dataset.cookie;
+  }
+
+  function onmouseup(event: MouseEvent) {
+    if (event.button === 0 && mouseDragging) {
+      reorderCookies(dragTarget);
+      mouseDragging = false;
+      dragTarget = undefined;
+      draggedY = 0;
+    }
+  }
+
+  function onmousemove(event: MouseEvent) {
+    if (!mouseDragging) return;
+    draggedY += event.movementY;
+  }
+
+  function ontouchstart(event: TouchEvent & { currentTarget: HTMLDivElement }) {
+    if (touchDragging === null && event.changedTouches.length === 1) {
+      touchDragging = event.changedTouches[0]!;
+      dragTarget = (event.currentTarget.closest(".ballot")! as HTMLDivElement).dataset.cookie;
+    }
+    event.stopPropagation();
+  }
+
+  function ontouchend(event: TouchEvent) {
+    if (
+      touchDragging &&
+      !Array.from(event.touches).some((touch) => touch.identifier === touchDragging!.identifier)
+    ) {
+      reorderCookies(dragTarget);
+      touchDragging = null;
+      dragTarget = undefined;
+      draggedY = 0;
+    }
+  }
+
+  function ontouchmove(event: TouchEvent) {
+    if (touchDragging === null) return;
+    const previous = touchDragging;
+    const current = Array.from(event.touches).find(
+      (touch) => touch.identifier === previous.identifier,
+    );
+    if (!current) return;
+    draggedY += current.clientY - previous.clientY;
+    touchDragging = current;
+  }
 </script>
 
 <dialog bind:this={dialog}>
@@ -34,17 +112,23 @@
     </header>
     <div class="cookie-list">
       {#each ordered as cookie, i (cookie.id)}
-        <div class="ballot">
+        <div
+          class="ballot"
+          class:dragging={dragTarget === cookie.id}
+          style="--drag-y: {draggedY}px;"
+          data-cookie={cookie.id}
+          animate:flip={{ duration: 100 }}
+        >
           <input type="hidden" name="cookies[{i}]" value={cookie.id} />
-          <div class="handle" draggable>
-            <Button icon compact onclick={(event) => (event.preventDefault(), shiftUp(cookie))}
-              ><Icon>keyboard_arrow_up</Icon></Button
-            >
+          <div class="handle" {onmousedown} {ontouchstart} role="presentation">
+            <Button icon compact onclick={(event) => (event.preventDefault(), shiftUp(cookie))}>
+              <Icon>keyboard_arrow_up</Icon>
+            </Button>
             <p class="counter">{i + 1}</p>
             <Icon>drag_handle</Icon>
-            <Button icon compact onclick={(event) => (event.preventDefault(), shiftDown(cookie))}
-              ><Icon>keyboard_arrow_down</Icon></Button
-            >
+            <Button icon compact onclick={(event) => (event.preventDefault(), shiftDown(cookie))}>
+              <Icon>keyboard_arrow_down</Icon>
+            </Button>
           </div>
           <div class="content">
             <div class="cookie">
@@ -72,6 +156,8 @@
     </div>
   </form>
 </dialog>
+
+<svelte:window {onmouseup} {onmousemove} {ontouchmove} {ontouchend} ontouchcancel={ontouchend} />
 
 <style>
   dialog {
@@ -124,6 +210,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    isolation: isolate;
   }
 
   .ballot,
@@ -131,6 +218,13 @@
     display: flex;
     flex-direction: row;
     gap: 1rem;
+  }
+
+  .ballot.dragging {
+    transform: translateY(var(--drag-y));
+    z-index: 1;
+    background-color: rgb(255 255 255 / 0.25);
+    backdrop-filter: blur(1rem);
   }
 
   .ballot {
@@ -161,6 +255,11 @@
     color: rgb(0 0 0 / 0.5);
     user-select: none;
     cursor: grab;
+    touch-action: none;
+  }
+
+  .handle:active {
+    cursor: grabbing;
   }
 
   .content {
@@ -169,10 +268,6 @@
     flex-direction: column;
     gap: 0.5rem;
     flex-basis: 200px;
-  }
-
-  .cookie:active {
-    cursor: grabbing;
   }
 
   picture {
