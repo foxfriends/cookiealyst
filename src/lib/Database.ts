@@ -1,7 +1,8 @@
+import { DATABASE_URL } from "$env/static/private";
 import pg, { type PoolClient, type QueryResult, type QueryResultRow } from "pg";
 import sql, { type SQLQuery } from "pg-sql2";
 
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new pg.Pool({ connectionString: DATABASE_URL });
 
 export class Database {
   static async connect() {
