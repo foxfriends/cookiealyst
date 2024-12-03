@@ -11,7 +11,7 @@ export async function getPublicRanking(database: Database, year: number): Promis
     rankings: Pick<Ranking, "cookie_id" | "ranking">[];
   }>(
     sql.query`
-      SELECT a.id, jsonb_agg(r.*) AS rankings
+      SELECT a.id AS account_id, jsonb_agg(r.*) AS rankings
         FROM accounts a
         JOIN LATERAL (
           SELECT cookie_id, ranking

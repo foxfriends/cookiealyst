@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Title from "$lib/components/Title.svelte";
   import type { Cookie } from "$lib/Database";
 
   const { cookie }: { cookie: Cookie } = $props();
@@ -10,7 +11,7 @@
   </picture>
   <div class="info">
     <heading>
-      <h1>{cookie.name}</h1>
+      <Title>{cookie.name}</Title>
     </heading>
     <p>{cookie.description}</p>
   </div>
@@ -53,13 +54,6 @@
     flex-direction: column;
     gap: 0.5rem;
     align-self: center;
-  }
-
-  h1 {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 3rem;
-    text-transform: lowercase;
   }
 
   p {

@@ -54,7 +54,7 @@ export async function load(event: PageServerLoadEvent) {
       publicRanking = await getPublicRanking(event.locals.database, year);
     }
   }
-  return { cookie, reviews, rankings, publicRanking };
+  return { cookie, year, reviews, rankings, publicRanking };
 }
 
 export const actions: Actions = {

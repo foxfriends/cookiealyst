@@ -8,16 +8,17 @@
   import Review from "./Review.svelte";
   import { ordinal } from "$lib/ordinal";
   import Prompt from "$lib/components/Prompt.svelte";
+  import Link from "$lib/components/Link.svelte";
 
   const { data }: { data: PageData } = $props();
-  const { cookie, reviews, account, rankings, publicRanking } = $derived(data);
+  const { cookie, year, reviews, account, rankings, publicRanking } = $derived(data);
 </script>
 
 <main>
   <Sheet>
     <div class="page">
       <nav>
-        <a href="/"><Icon>west</Icon> Tasting Menu 2024</a>
+        <Link href="/{year}"><Icon>west</Icon> Tasting Menu 2024</Link>
       </nav>
 
       <InfoSection {cookie} />
@@ -67,18 +68,6 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-    outline: none;
-    text-transform: lowercase;
-  }
-
-  a:where(:hover, :focus) {
-    text-decoration: underline;
-    text-underline-offset: 0.35rem;
   }
 
   hr {

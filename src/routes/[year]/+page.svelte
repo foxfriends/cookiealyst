@@ -9,6 +9,8 @@
   import Prompt from "$lib/components/Prompt.svelte";
   import Icon from "$lib/components/Icon.svelte";
   import type { Cookie } from "$lib/Database";
+  import Title from "$lib/components/Title.svelte";
+  import Link from "$lib/components/Link.svelte";
 
   const { data }: { data: PageData } = $props();
 
@@ -40,7 +42,7 @@
       case "personal":
         return rankedIds.indexOf(a.id) - rankedIds.indexOf(b.id);
       case "public":
-        return data.publicRankings.indexOf(a.id) - data.publicRankings.indexOf(b.id);
+        return data.publicRanking.indexOf(a.id) - data.publicRanking.indexOf(b.id);
     }
   }
 
@@ -51,12 +53,13 @@
   <Sheet>
     <div class="page">
       <header>
-        <h1>Tasting Menu {data.year}</h1>
+        <Title>Tasting Menu {data.year}</Title>
       </header>
 
       <div class="cast">
         {#if data.rankings.length}
-          <Prompt>Thank you for voting.</Prompt>
+          <p>thank you for voting.</p>
+          <Link href="/{data.year}/rankings">View all rankings <Icon>east</Icon></Link>
         {/if}
 
         {#if !data.account}
@@ -99,7 +102,7 @@
             <CookieInfo
               {cookie}
               personalRank={rankedIds.indexOf(cookie.id) + 1}
-              publicRank={data.publicRankings.indexOf(cookie.id) + 1}
+              publicRank={data.publicRanking.indexOf(cookie.id) + 1}
             />
           {:else}
             <div>The cookies are not yet made.</div>
@@ -116,14 +119,6 @@
   main {
     max-width: 60rem;
     margin: 0 auto;
-  }
-
-  h1 {
-    font-size: 2rem;
-    font-family: var(--font-display);
-    font-style: italic;
-    text-align: center;
-    text-transform: lowercase;
   }
 
   .list-grid {

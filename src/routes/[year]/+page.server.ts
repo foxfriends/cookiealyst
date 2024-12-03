@@ -13,16 +13,16 @@ export async function load(event: PageServerLoadEvent) {
   );
 
   let rankings: Ranking[] = [];
-  let publicRankings: string[] = [];
+  let publicRanking: string[] = [];
   if (event.locals.account) {
     rankings = await event.locals.database.many<Ranking>(
       sql.query`SELECT * FROM rankings WHERE year = ${sql.value(year)} AND account_id = ${sql.value(event.locals.account)}`,
     );
     if (rankings.length) {
-      publicRankings = await getPublicRanking(event.locals.database, year);
+      publicRanking = await getPublicRanking(event.locals.database, year);
     }
   }
-  return { cookies, year, rankings, publicRankings };
+  return { cookies, year, rankings, publicRanking };
 }
 
 export const actions: Actions = {
