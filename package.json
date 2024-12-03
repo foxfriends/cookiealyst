@@ -4,13 +4,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "pre-build": "NODE_ENV=production npx svelte-kit sync",
+    "prebuild": "NODE_ENV=production npx svelte-kit sync",
     "build": "NODE_ENV=production vite build",
     "preview": "vite preview",
-    "pre-check": "svelte-kit sync",
+    "precheck": "svelte-kit sync",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "pre-lint": "svelte-kit sync",
+    "prelint": "svelte-kit sync",
     "format": "prettier --write .",
     "lint": "eslint ."
   },
