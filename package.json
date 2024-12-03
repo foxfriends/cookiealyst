@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "pre-build": "NODE_ENV=production npx svelte-kit sync",
+    "build": "NODE_ENV=production vite build",
     "preview": "vite preview",
     "pre-check": "svelte-kit sync",
     "check": "svelte-check --tsconfig ./tsconfig.json",
