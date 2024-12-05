@@ -9,6 +9,7 @@
   import { ordinal } from "$lib/ordinal";
   import Prompt from "$lib/components/Prompt.svelte";
   import Link from "$lib/components/Link.svelte";
+  import AccountStatus from "$lib/components/AccountStatus.svelte";
 
   const { data }: { data: PageData } = $props();
   const { cookie, year, reviews, account, rankings, publicRanking } = $derived(data);
@@ -16,6 +17,10 @@
 
 <main>
   <Sheet>
+    {#snippet header()}
+      <AccountStatus {account} />
+    {/snippet}
+
     <div class="page">
       <nav>
         <Link href="/{year}"><Icon>west</Icon> Tasting Menu 2024</Link>
@@ -28,7 +33,7 @@
         {#if rankings.length}
           <div class="rankings">
             {#each rankings as ranking (ranking.id)}
-              <div><strong>{ranking.account_id}</strong></div>
+              <div class="name"><strong>{ranking.account_id}</strong></div>
               <div>{ordinal(ranking.ranking + 1)}</div>
             {/each}
             <div class="overall">
@@ -127,5 +132,11 @@
     grid-template-columns: subgrid;
     border-top: 1px solid rgb(0 0 0 / 0.25);
     padding-top: 0.25rem;
+  }
+
+  .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

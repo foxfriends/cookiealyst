@@ -6,13 +6,18 @@
   import Prompt from "$lib/components/Prompt.svelte";
   import Title from "$lib/components/Title.svelte";
   import Link from "$lib/components/Link.svelte";
+  import AccountStatus from "$lib/components/AccountStatus.svelte";
 
   const { data }: { data: PageData } = $props();
-  const { cookies, year, rankings, publicRanking } = $derived(data);
+  const { cookies, year, account, rankings, publicRanking } = $derived(data);
 </script>
 
 <main>
   <Sheet>
+    {#snippet header()}
+      <AccountStatus {account} />
+    {/snippet}
+
     <div class="page">
       <nav>
         <Link href="/"><Icon>west</Icon> Tasting Menu 2024</Link>

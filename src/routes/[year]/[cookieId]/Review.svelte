@@ -26,7 +26,7 @@
 >
   <div class="review">
     <p class="meta">
-      <strong>{review.account_id}</strong>
+      <strong class="name">{review.account_id}</strong>
       {#if authorRanking}
         ranks this cookie <strong>{ordinal(authorRanking.ranking + 1)}</strong>
       {/if}
@@ -40,7 +40,7 @@
     {@const ranking = rankings.find((ranking) => ranking.account_id === comment.account_id)}
     <div class="comment">
       <p class="meta">
-        <strong>{comment.account_id}</strong>
+        <strong class="name">{comment.account_id}</strong>
         {#if ranking}
           ranks this cookie <strong>{ordinal(ranking.ranking + 1)}</strong>
         {/if}
@@ -117,5 +117,10 @@
     color: rgb(0 0 0 / 0.7);
     font-size: 0.75rem;
     font-weight: 500;
+  }
+
+  .name {
+    overflow: hidden;
+    word-break: break-word;
   }
 </style>

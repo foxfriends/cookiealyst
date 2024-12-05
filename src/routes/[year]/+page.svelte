@@ -11,6 +11,7 @@
   import type { Cookie } from "$lib/Database";
   import Title from "$lib/components/Title.svelte";
   import Link from "$lib/components/Link.svelte";
+  import AccountStatus from "$lib/components/AccountStatus.svelte";
 
   const { data }: { data: PageData } = $props();
 
@@ -51,6 +52,12 @@
 
 <main>
   <Sheet>
+    {#snippet header()}
+      {#if data.account}
+        <AccountStatus account={data.account} />
+      {/if}
+    {/snippet}
+
     <div class="page">
       <header>
         <Title>Tasting Menu {data.year}</Title>

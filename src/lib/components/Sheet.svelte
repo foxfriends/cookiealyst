@@ -1,10 +1,16 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  const { children }: { children: Snippet } = $props();
+  const { children, header }: { children: Snippet; header?: Snippet } = $props();
 </script>
 
-<article>{@render children()}</article>
+<article>
+  <div class="topmargin">
+    {@render header?.()}
+  </div>
+
+  {@render children()}
+</article>
 
 <style>
   article {
@@ -16,9 +22,18 @@
     container-name: sheet;
   }
 
+  .topmargin {
+    height: 3rem;
+  }
+
   @media (min-width: 600px) {
     article {
       padding: 8rem 6rem;
+      padding-top: 0;
+    }
+
+    .topmargin {
+      height: 8rem;
     }
   }
 </style>

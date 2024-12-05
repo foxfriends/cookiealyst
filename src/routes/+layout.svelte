@@ -5,32 +5,18 @@
   import Button from "$lib/components/Button.svelte";
   import Input from "$lib/components/Input.svelte";
   import Prompt from "$lib/components/Prompt.svelte";
+  import Snowflakes from "$lib/components/Snowflakes.svelte";
 
   const { children, data }: { children: Snippet; data: LayoutData } = $props();
 </script>
 
-<article class="account-status" role="status">
-  {#if data.account}
-    <form action="/logout" method="POST" use:enhance>
-      <Prompt>
-        Welcome, <span style="text-transform: none; font-weight: 600">{data.account}</span>!
-      </Prompt>
-      <Button compact>Sign out</Button>
-    </form>
-  {:else}
-    <form action="/login" method="POST" use:enhance>
-      <label class="prompt" for="account_id">
-        <Prompt>Enter your name to rank and review</Prompt>
-      </label>
-      <div class="field">
-        <Input id="account_id" name="account_id" placeholder="NAME" required />
-        <Button compact>Sign in</Button>
-      </div>
-    </form>
-  {/if}
-</article>
+<div class="snowfall">
+  <Snowflakes />
+</div>
 
-{@render children()}
+<div class="content">
+  {@render children()}
+</div>
 
 <style>
   :global {
@@ -43,8 +29,6 @@
     }
 
     :root {
-      --color-ice: rgb(214 255 250);
-      --color-snow: rgb(232 246 250);
       --font-display: "Baskerville", "Libre Baskerville", serif;
       --font-body: "Avenir", "Montserrat", sans-serif;
 
@@ -52,39 +36,27 @@
     }
 
     body {
-      background-color: var(--color-ice);
-      background-image: linear-gradient(to bottom, var(--color-snow), var(--color-ice));
       min-width: 100vw;
       min-height: 100vh;
     }
   }
 
-  .account-status {
-    max-width: 60rem;
-    margin: 1rem auto;
-    padding: 0 1rem;
+  .content {
+    padding: 4rem 2rem;
   }
 
-  @media (min-width: 600px) {
-    .account-status {
-      padding: 0 6rem;
-    }
-  }
-
-  form {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    align-items: end;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    align-items: end;
-    flex-wrap: wrap;
+  .snowfall {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100lvw;
+    height: 100lvh;
+    background-image: linear-gradient(
+      to bottom,
+      rgb(47 46 55),
+      rgb(42 66 102) 35%,
+      rgb(215 248 255)
+    );
   }
 </style>
