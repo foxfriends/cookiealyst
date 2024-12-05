@@ -1,5 +1,6 @@
 import type { Handle } from "@sveltejs/kit";
 import sql from "pg-sql2";
+import { ENV } from "$env/static/private";
 import { Database, type Session } from "$lib/Database";
 
 export async function handle({ event, resolve }: Parameters<Handle>[0]) {
@@ -29,8 +30,8 @@ export async function handle({ event, resolve }: Parameters<Handle>[0]) {
     path: "/",
     expires: session.expires_at,
     httpOnly: true,
-    sameSite: "none",
-    secure: false,
+    sameSite: "lax",
+    secure: ENV === "production",
   });
 
   try {

@@ -3,8 +3,11 @@
   import Icon from "$lib/components/Icon.svelte";
   import Button from "$lib/components/Button.svelte";
   import { flip } from "svelte/animate";
+  import type { ActionData } from "./$types";
+  import Error from "$lib/components/Error.svelte";
+  import { applyAction, enhance } from "$app/forms";
 
-  const { cookies }: { cookies: Cookie[] } = $props();
+  const { cookies, form }: { cookies: Cookie[]; form?: ActionData } = $props();
 
   let dialog: HTMLDialogElement | undefined = $state();
   const ordered = $state(Array.from(cookies));
@@ -105,7 +108,15 @@
 
 <dialog bind:this={dialog}>
   <Button icon onclick={() => dialog?.close()}><Icon>close</Icon></Button>
-  <form action="?/vote" method="POST">
+  <form
+    action="?/vote"
+    method="POST"
+    use:enhance={() =>
+      async ({ result }) => {
+        if (result.type === "success") window.location.reload();
+        else applyAction(result);
+      }}
+  >
     <header>
       <h1>Cast Your Votes</h1>
       <p class="info">Sort the cookies in your order of preference. Optionally, leave a review.</p>
@@ -152,6 +163,9 @@
     </div>
 
     <div class="action">
+      {#if form?.message}
+        <Error>{form.message}</Error>
+      {/if}
       <Button>Submit</Button>
     </div>
   </form>
@@ -203,7 +217,10 @@
   }
 
   .action {
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .cookie-list {

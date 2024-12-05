@@ -1,5 +1,6 @@
 import type { Cookie, Ranking } from "$lib/Database";
 import sql from "pg-sql2";
+import pg from "pg";
 import type { PageServerLoadEvent, Actions } from "./$types";
 import qs from "qs";
 import { error, fail } from "@sveltejs/kit";
@@ -27,9 +28,9 @@ export async function load(event: PageServerLoadEvent) {
 
 export const actions: Actions = {
   vote: async ({ locals: { database, account }, params, request }) => {
-    if (!account) return fail(403, { message: "Not logged in" });
+    if (!account) return fail(403, { action: "vote" as const, message: "Not logged in" });
     const year = Number.parseInt(params.year);
-    if (Number.isNaN(year)) return fail(400, { message: "Invalid year" });
+    if (Number.isNaN(year)) return fail(400, { action: "vote" as const, message: "Invalid year" });
 
     const cookies = await database.many<Cookie>(
       sql.query`SELECT * FROM cookies WHERE year = ${sql.value(year)}`,
@@ -40,12 +41,16 @@ export const actions: Actions = {
       comments: Record<string, string>;
     };
 
-    if (!form.cookies.length) return fail(400, { message: "Cookie rankings are required" });
+    if (!form.cookies.length)
+      return fail(400, { action: "vote" as const, message: "Cookie rankings are required" });
     if (form.cookies.length !== cookies.length) {
-      return fail(400, { message: "All cookies are required" });
+      return fail(400, { action: "vote" as const, message: "All cookies are required" });
     }
     if (!cookies.every((cookie) => form.cookies.includes(cookie.id))) {
-      return fail(400, { message: "Incorrect cookies were provided for this year" });
+      return fail(400, {
+        action: "vote" as const,
+        message: "Incorrect cookies were provided for this year",
+      });
     }
 
     const rankings = sql.join(
@@ -71,18 +76,29 @@ export const actions: Actions = {
       ", ",
     );
 
-    await database.transaction(async () => {
-      await database.query(
-        sql.query`DELETE FROM rankings WHERE account_id = ${sql.value(account)}`,
-      );
-      await database.query(
-        sql.query`INSERT INTO rankings (account_id, cookie_id, year, ranking) VALUES ${rankings}`,
-      );
-      if (comments.length) {
+    try {
+      await database.transaction(async () => {
         await database.query(
-          sql.query`INSERT INTO reviews (account_id, cookie_id, year, comment) VALUES ${commentsSql}`,
+          sql.query`DELETE FROM rankings WHERE account_id = ${sql.value(account)}`,
         );
+        await database.query(
+          sql.query`INSERT INTO rankings (account_id, cookie_id, year, ranking) VALUES ${rankings}`,
+        );
+        if (comments.length) {
+          await database.query(
+            sql.query`INSERT INTO reviews (account_id, cookie_id, year, comment) VALUES ${commentsSql}`,
+          );
+        }
+      });
+    } catch (error) {
+      if (
+        error instanceof pg.DatabaseError &&
+        error.code === "23514" &&
+        error.constraint === "comment_max_length"
+      ) {
+        return fail(400, { action: "vote" as const, message: "Comment is too long" });
       }
-    });
+      return fail(500, { action: "vote" as const, message: "Something went wrong" });
+    }
   },
 };

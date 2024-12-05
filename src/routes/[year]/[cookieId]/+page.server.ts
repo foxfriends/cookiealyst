@@ -2,7 +2,9 @@ import type { Comment, Cookie, Ranking, Review } from "$lib/Database";
 import { error, fail } from "@sveltejs/kit";
 import type { PageServerLoadEvent, Actions } from "./$types";
 import sql from "pg-sql2";
+import pg from "pg";
 import { getPublicRanking } from "$lib/publicRanking";
+import { DATABASE_URL } from "$env/static/private";
 
 export async function load(event: PageServerLoadEvent) {
   const { cookieId } = event.params;
@@ -67,14 +69,25 @@ export const actions: Actions = {
     if (Number.isNaN(year)) return fail(404, { message: "Cookie not found" });
     const comment = body.get("comment")?.toString();
     if (!comment) return fail(400, { message: "Comment is required" });
-    const review = await locals.database.one<Review>(
-      sql.query`
+    try {
+      const review = await locals.database.one<Review>(
+        sql.query`
         INSERT INTO reviews (cookie_id, year, account_id, comment)
           VALUES (${sql.value(cookieId)}, ${sql.value(year)}, ${sql.value(accountId)}, ${sql.value(comment)})
           RETURNING *;
       `,
-    );
-    return { review };
+      );
+      return { review };
+    } catch (error) {
+      if (
+        error instanceof pg.DatabaseError &&
+        error.code === "23514" &&
+        error.constraint === "comment_max_length"
+      ) {
+        return fail(400, { action: "review" as const, message: "Comment is too long" });
+      }
+      return fail(500, { action: "review" as const, message: "Something went wrong" });
+    }
   },
 
   comment: async ({ locals, request }) => {
@@ -89,13 +102,24 @@ export const actions: Actions = {
 
     const text = body.get("comment")?.toString();
     if (!text) return fail(400, { message: "Comment is required" });
-    const comment = await locals.database.one<Review>(
-      sql.query`
+    try {
+      const comment = await locals.database.one<Review>(
+        sql.query`
         INSERT INTO comments (review_id, account_id, comment)
           VALUES (${sql.value(reviewId)}, ${sql.value(accountId)}, ${sql.value(text)})
           RETURNING *;
       `,
-    );
-    return { comment };
+      );
+      return { comment };
+    } catch (error) {
+      if (
+        error instanceof pg.DatabaseError &&
+        error.code === "23514" &&
+        error.constraint === "comment_max_length"
+      ) {
+        return fail(400, { action: "comment" as const, message: "Comment is too long" });
+      }
+      return fail(500, { action: "comment" as const, message: "Something went wrong" });
+    }
   },
 };

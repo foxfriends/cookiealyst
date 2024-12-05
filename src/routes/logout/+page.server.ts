@@ -1,8 +1,10 @@
-import { type Actions } from "@sveltejs/kit";
+import { redirect, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
-  default: async ({ locals }) => {
+  default: async ({ locals, request }) => {
     locals.account = null;
-    return {};
+    const data = await request.formData();
+    const to = data.get("to")?.toString() ?? "/";
+    redirect(303, to);
   },
 };

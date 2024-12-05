@@ -1,15 +1,18 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+  import { page } from "$app/stores";
+  import type { ActionData } from "../../routes/login/$types";
   import Button from "./Button.svelte";
   import Input from "./Input.svelte";
   import Prompt from "./Prompt.svelte";
 
-  const { account }: { account: string | null } = $props();
+  const { account, form }: { account: string | null; form?: ActionData } = $props();
 </script>
 
 <article class="account-status" role="status">
   {#if account}
     <form action="/logout" method="POST" use:enhance>
+      <input type="hidden" value={$page.url.pathname} name="to" />
       <Prompt>
         Welcome, <span style="text-transform: none; font-weight: 600">{account}</span>!
       </Prompt>
@@ -17,6 +20,7 @@
     </form>
   {:else}
     <form action="/login" method="POST" use:enhance>
+      <input type="hidden" value={$page.url.pathname} name="to" />
       <label class="prompt" for="account_id">
         <Prompt>Enter your name to rank and review</Prompt>
       </label>

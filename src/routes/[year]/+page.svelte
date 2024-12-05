@@ -1,10 +1,11 @@
 <script lang="ts">
   import Button from "$lib/components/Button.svelte";
   import Sheet from "$lib/components/Sheet.svelte";
-  import type { PageData } from "./$types";
+  import type { ActionData, PageData } from "./$types";
+  import type { ActionData as LoginActionData } from "../login/$types";
   import CookieInfo from "./CookieInfo.svelte";
   import VoteCaster from "./VoteCaster.svelte";
-  import { enhance } from "$app/forms";
+  import { applyAction, enhance } from "$app/forms";
   import Input from "$lib/components/Input.svelte";
   import Prompt from "$lib/components/Prompt.svelte";
   import Icon from "$lib/components/Icon.svelte";
@@ -12,8 +13,10 @@
   import Title from "$lib/components/Title.svelte";
   import Link from "$lib/components/Link.svelte";
   import AccountStatus from "$lib/components/AccountStatus.svelte";
+  import Error from "$lib/components/Error.svelte";
+  import { onMount } from "svelte";
 
-  const { data }: { data: PageData } = $props();
+  const { data, form }: { data: PageData; form: ActionData | LoginActionData } = $props();
 
   let voteCaster: VoteCaster | undefined = $state();
   const rankedIds = $derived(data.rankings.map((ranking) => ranking.cookie_id));
@@ -54,7 +57,7 @@
   <Sheet>
     {#snippet header()}
       {#if data.account}
-        <AccountStatus account={data.account} />
+        <AccountStatus account={data.account} form={form?.action === "login" ? form : undefined} />
       {/if}
     {/snippet}
 
@@ -70,7 +73,15 @@
         {/if}
 
         {#if !data.account}
-          <form action="/login" class="cast" method="POST" use:enhance>
+          <form
+            action="/login"
+            class="cast"
+            method="POST"
+            use:enhance={() =>
+              async ({ result }) =>
+                applyAction(result)}
+          >
+            <input type="hidden" value="/{year}" name="to" />
             <label for="account_id_2">
               <Prompt>Enter your name to rank and review</Prompt>
             </label>
@@ -78,6 +89,11 @@
               <Input id="account_id_2" name="account_id" placeholder="NAME" required />
               <Button compact>Sign in</Button>
             </div>
+            {#if form?.action === "login" && form.message}
+              <Error>
+                {form.message}
+              </Error>
+            {/if}
           </form>
         {:else}
           <Button onclick={showVoteCaster} disabled={!data.account}>
@@ -120,7 +136,11 @@
   </Sheet>
 </main>
 
-<VoteCaster bind:this={voteCaster} cookies={rankedCookies} />
+<VoteCaster
+  bind:this={voteCaster}
+  cookies={rankedCookies}
+  form={form?.action === "vote" ? form : undefined}
+/>
 
 <style>
   main {
