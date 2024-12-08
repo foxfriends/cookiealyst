@@ -54,7 +54,7 @@
 </script>
 
 <svelte:head>
-  <title>Cookiealyst | {data.year}</title>
+  <title>Cookies | {data.year}</title>
   <meta name="description" content="Pearl's {data.year} cookie box rankings" />
 </svelte:head>
 

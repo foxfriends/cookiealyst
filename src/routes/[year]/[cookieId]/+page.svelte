@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-  <title>Cookiealyst | {cookie.name}</title>
+  <title>Cookies | {cookie.name}</title>
   <meta name="description" content={cookie.description} />
 </svelte:head>
 
