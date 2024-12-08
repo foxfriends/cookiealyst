@@ -1,11 +1,14 @@
 import { Database, type Cookie } from "$lib/Database";
 import { readFileSync } from "node:fs";
 import TOML from "toml";
+import pg from "pg";
 import sql from "pg-sql2";
 
 const input = await readFileSync(process.stdin.fd, "utf8");
 const { cookies } = TOML.parse(input) as { cookies: Cookie[] };
-const db = await Database.connect();
+
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+const db = await Database.connect(pool);
 
 const values = sql.join(
   cookies.map(
@@ -28,4 +31,4 @@ const result = await db.query(sql.query`
 console.log(`${result.rowCount} cookies updated`);
 
 db.release();
-process.exit(0);
+pool.end();

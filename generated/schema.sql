@@ -41,7 +41,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.accounts (
     id public.citext NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT account_id_max_length CHECK ((length((id)::text) <= 128))
 );
 
 
@@ -54,7 +55,8 @@ CREATE TABLE public.comments (
     account_id public.citext NOT NULL,
     review_id bigint NOT NULL,
     comment text NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT comment_max_length CHECK ((length(comment) <= 2048))
 );
 
 
@@ -124,7 +126,8 @@ CREATE TABLE public.reviews (
     cookie_id text NOT NULL,
     comment text,
     year integer NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT comment_max_length CHECK ((length(comment) <= 2048))
 );
 
 
@@ -183,7 +186,7 @@ ALTER TABLE ONLY public.cookies
 --
 
 ALTER TABLE ONLY public.cookies
-    ADD CONSTRAINT cookies_year_ordering_key UNIQUE (year, ordering);
+    ADD CONSTRAINT cookies_year_ordering_key UNIQUE (year, ordering) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

@@ -1,35 +1,41 @@
 [[cookies]]
-id = "pecan-snowball"
-year = 2024
-name = "Pecan Snowball"
-description = "It's a snowball!"
-
-[[cookies]]
-id = "spruce-strawberry-thumb"
-year = 2024
-name = "Spruce Strawberry Thumbprints"
-description = "A shortbread with spruce tips flavour"
-
-[[cookies]]
 id = "cranberry-pistachio"
 year = 2024
-name = "Cranberry Pistachio Cookie"
-description = "Pearl's signature cranberry pistachio cookie, this cookie has a very long description so that we can test how it looks when there is quite a bit more text."
-
-[[cookies]]
-id = "lemon-curd-stuffed"
-year = 2024
-name = "Lemon Curd Stuffed Cookie"
-description = "Lemon curd is inside"
+name = "Brown Butter Slice"
+description = "Cranberry + pistachio + white chocolate"
+image_url = "/cranberry-pistachio.png"
 
 [[cookies]]
 id = "rye-chocolate-hazelnut-praline"
 year = 2024
-name = "Rye Chocolate Chip Cookie with Hazelnut Praline"
-description = "A hearty chocolate chip cookie, with roasted hazelnut praline"
+name = "Rye Chocolate Chip"
+description = "Hazelnut praline + 70% dark chocolate"
+image_url = "/rye-chocolate-hazelnut-praline.png"
+
+[[cookies]]
+id = "pecan-snowball"
+year = 2024
+name = "Pecan Snowball"
+description = "Vanilla bean + toasted pecans"
+image_url = "/pecan-snowball.png"
 
 [[cookies]]
 id = "apple-caramel-sandwich"
 year = 2024
-name = "Apple Caramel Sandwich Cookie"
-description = "Apple-cider infused caramel sandwiched between apple-infused shortbread cookies"
+name = "Apple Sandwich"
+description = "Freeze dried apple + cider caramel"
+image_url = "/apple-caramel-sandwich.png"
+
+[[cookies]]
+id = "lemon-curd-stuffed"
+year = 2024
+name = "Lemon Curd Stuffed"
+description = "Poppyseed + zest of 10 lemons"
+image_url = "/lemon-curd-stuffed.png"
+
+[[cookies]]
+id = "spruce-strawberry-thumb"
+year = 2024
+name = "Forest Thumbprint"
+description = "Summer strawberries + wild spruce tips"
+image_url = "/spruce-strawberry-thumb.png"

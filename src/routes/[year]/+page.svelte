@@ -53,6 +53,11 @@
   const orderedCookies = $derived(data.cookies.toSorted(orderingFunction));
 </script>
 
+<svelte:head>
+  <title>Cookiealyst | {data.year}</title>
+  <meta name="description" content="Pearl's {data.year} cookie box rankings" />
+</svelte:head>
+
 <main>
   <Sheet>
     {#snippet header()}
@@ -81,7 +86,7 @@
               async ({ result }) =>
                 applyAction(result)}
           >
-            <input type="hidden" value="/{year}" name="to" />
+            <input type="hidden" value="/{data.year}" name="to" />
             <label for="account_id_2">
               <Prompt>Enter your name to rank and review</Prompt>
             </label>

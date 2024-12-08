@@ -1,10 +1,13 @@
 import type { Handle } from "@sveltejs/kit";
+import pg from "pg";
 import sql from "pg-sql2";
-import { ENV } from "$env/static/private";
+import { ENV, DATABASE_URL } from "$env/static/private";
 import { Database, type Session } from "$lib/Database";
 
+const pool = new pg.Pool({ connectionString: DATABASE_URL });
+
 export async function handle({ event, resolve }: Parameters<Handle>[0]) {
-  event.locals.database = await Database.connect();
+  event.locals.database = await Database.connect(pool);
 
   const sessionId = event.cookies.get("session");
   let session = null;

@@ -291,7 +291,6 @@
     aspect-ratio: 1 / 1;
     width: 4rem;
     height: 4rem;
-    background-color: rgb(0 0 0 / 0.05);
     overflow: hidden;
     flex-shrink: 0;
   }

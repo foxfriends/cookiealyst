@@ -15,6 +15,11 @@
   const { cookie, year, reviews, account, rankings, publicRanking } = $derived(data);
 </script>
 
+<svelte:head>
+  <title>Cookiealyst | {cookie.name}</title>
+  <meta name="description" content={cookie.description} />
+</svelte:head>
+
 <main>
   <Sheet>
     {#snippet header()}

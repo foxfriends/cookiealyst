@@ -36,7 +36,6 @@
     min-width: 12.5rem;
     width: 100%;
     max-width: 25rem;
-    background-color: rgb(0 0 0 / 0.05);
     align-self: center;
   }
 

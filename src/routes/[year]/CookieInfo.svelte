@@ -108,7 +108,6 @@
   picture {
     inset: 0;
     position: absolute;
-    background-color: rgb(0 0 0 / 0.05);
   }
 
   img {

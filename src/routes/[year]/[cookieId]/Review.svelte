@@ -77,6 +77,7 @@
     border: 1px solid rgb(0 0 0 / 0.12);
     flex-grow: 1;
     padding: 1rem;
+    word-break: break-word;
   }
 
   .comment,

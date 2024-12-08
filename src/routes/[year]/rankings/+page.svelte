@@ -12,6 +12,11 @@
   const { cookies, year, account, rankings, publicRanking } = $derived(data);
 </script>
 
+<svelte:head>
+  <title>Cookiealyst | {data.year}</title>
+  <meta name="description" content="Pearl's {data.year} cookie box rankings" />
+</svelte:head>
+
 <main>
   <Sheet>
     {#snippet header()}
@@ -110,7 +115,6 @@
     aspect-ratio: 1 / 1;
     width: 1.5rem;
     height: 1.5rem;
-    background-color: rgb(0 0 0 / 0.05);
     align-self: center;
   }
 
