@@ -134,7 +134,7 @@
     text-decoration: none;
     outline: none;
     text-transform: lowercase;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 
   section:where(:hover, :has(:focus-visible)) a {
