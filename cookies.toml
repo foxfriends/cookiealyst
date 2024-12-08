@@ -16,7 +16,7 @@ image_url = "/rye-chocolate-hazelnut-praline.png"
 id = "pecan-snowball"
 year = 2024
 name = "Pecan Snowball"
-description = "Vanilla bean + toasted pecans"
+description = "Vanilla bean + toasted pecan"
 image_url = "/pecan-snowball.png"
 
 [[cookies]]
@@ -37,5 +37,5 @@ image_url = "/lemon-curd-stuffed.png"
 id = "spruce-strawberry-thumb"
 year = 2024
 name = "Forest Thumbprint"
-description = "Summer strawberries + wild spruce tips"
+description = "Summer strawberry + wild spruce tip"
 image_url = "/spruce-strawberry-thumb.png"
