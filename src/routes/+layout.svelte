@@ -42,6 +42,7 @@
   }
 
   .content {
+    position: relative;
     padding: 4rem 2rem;
   }
 
