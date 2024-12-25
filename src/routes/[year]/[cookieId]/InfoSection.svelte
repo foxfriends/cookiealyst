@@ -51,7 +51,6 @@
   .info {
     display: flex;
     flex-direction: column;
-    text-align: left;
     gap: 0.5rem;
     align-self: center;
   }

@@ -105,6 +105,10 @@
     margin: 0 auto;
   }
 
+  header {
+    text-align: center;
+  }
+
   .page {
     display: flex;
     flex-direction: column;
