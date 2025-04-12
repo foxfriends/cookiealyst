@@ -11,7 +11,6 @@
     font-size: 2rem;
     font-family: var(--font-display);
     font-style: italic;
-    text-align: center;
     text-transform: lowercase;
   }
 </style>

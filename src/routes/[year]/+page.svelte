@@ -153,6 +153,10 @@
     margin: 0 auto;
   }
 
+  header {
+    text-align: center;
+  }
+
   .list-grid {
     display: grid;
     grid-template-columns: auto 1fr;
