@@ -2,22 +2,24 @@ group "default" {
     targets = ["cookiealyst-migrate", "cookiealyst-load", "cookiealyst"]
 }
 
-target "docker-metadata-action" {}
+target "image-metadata-action" {}
+target "migrate-metadata-action" {}
+target "load-metadata-action" {}
 
 target "cookiealyst" {
-  inherits = ["docker-metadata-action"]
+  inherits = ["image-metadata-action"]
   dockerfile = "Dockerfile"
   target = "release"
 }
 
 target "cookiealyst-migrate" {
-  inherits = ["docker-metadata-action"]
+  inherits = ["migrate-metadata-action"]
   dockerfile = "Dockerfile"
   target = "migrate"
 }
 
 target "cookiealyst-load" {
-  inherits = ["docker-metadata-action"]
+  inherits = ["load-metadata-action"]
   dockerfile = "Dockerfile"
   target = "load"
 }

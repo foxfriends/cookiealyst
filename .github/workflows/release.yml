@@ -30,19 +30,31 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract metadata for Docker
-        id: meta
+        id: image-meta
         uses: docker/metadata-action@v5
         with:
-          images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            ${{ env.REGISTRY }}/${{ env.MIGRATE_IMAGE_NAME }}
-            ${{ env.REGISTRY }}/${{ env.LOAD_IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          bake-target: image-metadata-action
+      - name: Extract metadata for Docker
+        id: migrate-meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.MIGRATE_IMAGE_NAME }}
+          bake-target: migrate-metadata-action
+      - name: Extract metadata for Docker
+        id: load-meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.LOAD_IMAGE_NAME }}
+          bake-target: load-metadata-action
       - name: Build and push
         id: push
         uses: docker/bake-action@v6
         with:
           files: |
             ./docker-bake.hcl
-            cwd://${{ steps.meta.outputs.bake-file }}
+            cwd://${{ steps.image-meta.outputs.bake-file }}
+            cwd://${{ steps.migrate-meta.outputs.bake-file }}
+            cwd://${{ steps.load-meta.outputs.bake-file }}
           push: true
           provenance: true
