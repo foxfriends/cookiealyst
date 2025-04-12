@@ -45,12 +45,4 @@ jobs:
             ./docker-bake.hcl
             cwd://${{ steps.meta.outputs.bake-file }}
           push: true
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
-        with:
-          subject-name: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            ${{ env.REGISTRY }}/${{ env.MIGRATE_IMAGE_NAME }}
-            ${{ env.REGISTRY }}/${{ env.LOAD_IMAGE_NAME }}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+          provenance: true
