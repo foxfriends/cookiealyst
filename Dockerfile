@@ -2,6 +2,7 @@ FROM node:22.14.0 AS source
 WORKDIR /app/
 COPY ./package.json ./package-lock.json .
 RUN npm ci
+COPY tsconfig.json ./
 COPY ./src/ ./src/
 ENTRYPOINT ["false"]
 
@@ -19,7 +20,7 @@ ENTRYPOINT ["npx", "graphile-migrate", "migrate"]
 
 FROM source AS build
 WORKDIR /app/
-COPY ./svelte.config.js tsconfig.json ./vite.config.ts ./
+COPY ./svelte.config.js ./vite.config.ts ./
 COPY ./static/ ./static/
 ENV ENV=production
 RUN npm run build
