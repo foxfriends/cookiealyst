@@ -4,7 +4,6 @@ import type { PageServerLoadEvent, Actions } from "./$types";
 import sql from "pg-sql2";
 import pg from "pg";
 import { getPublicRanking } from "$lib/publicRanking";
-import { DATABASE_URL } from "$env/static/private";
 
 export async function load(event: PageServerLoadEvent) {
   const { cookieId } = event.params;

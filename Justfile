@@ -34,8 +34,8 @@ up: && migrate
     docker compose exec postgres psql {{DATABASE_URL}} -c "" || docker compose exec postgres psql {{ROOT_DATABASE_URL}} -c 'CREATE DATABASE {{database_name}}'
     docker compose exec postgres psql {{SHADOW_DATABASE_URL}} -c "" || docker compose exec postgres psql {{ROOT_DATABASE_URL}} -c 'CREATE DATABASE {{shadow_database_name}}'
 
-load:
-    npx tsx ./src/scripts/load-cookies.ts < cookies.toml
+load file="cookies.toml":
+    npx tsx ./src/scripts/load-cookies.ts cookies.toml
 
 down:
     docker compose down

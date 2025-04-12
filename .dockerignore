@@ -1,0 +1,11 @@
+/.git/
+/.github/
+/.env*
+!/.env.example
+.prettier*
+eslint*
+/.svelte-kit/
+/build/
+/generated/
+/node_modules/
+README.md

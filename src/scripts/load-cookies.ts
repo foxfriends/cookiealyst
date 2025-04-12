@@ -4,7 +4,8 @@ import TOML from "toml";
 import pg from "pg";
 import sql from "pg-sql2";
 
-const input = await readFileSync(process.stdin.fd, "utf8");
+const source = process.argv[2] ?? process.stdin.fd;
+const input = await readFileSync(source, "utf8");
 const { cookies } = TOML.parse(input) as { cookies: Cookie[] };
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
