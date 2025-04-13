@@ -246,6 +246,22 @@ ALTER TABLE ONLY public.comments
 
 
 --
+-- Name: rankings rankings_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rankings
+    ADD CONSTRAINT rankings_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: rankings rankings_cookie_id_year_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rankings
+    ADD CONSTRAINT rankings_cookie_id_year_fkey FOREIGN KEY (cookie_id, year) REFERENCES public.cookies(id, year) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: reviews reviews_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
