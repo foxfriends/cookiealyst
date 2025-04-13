@@ -46,6 +46,14 @@ resource "docker_container" "cookiealyst" {
     name = data.docker_network.bridge.name
   }
 
+  healthcheck {
+    test         = ["CMD", "curl", "-f", "localhost:3000/health"]
+    interval     = "0.5s"
+    retries      = 2
+    start_period = "1s"
+    timeout      = "0.5s"
+  }
+
   env = [
     "DATABASE_URL=${local.database_url}",
     "PORT=3000",
