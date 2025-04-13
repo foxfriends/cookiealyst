@@ -12,9 +12,10 @@ resource "docker_volume" "postgres_data" {
 }
 
 resource "docker_container" "postgres" {
-  image = docker_image.postgres.image_id
-  name  = "${var.name}-postgres"
-  wait  = true
+  image   = docker_image.postgres.image_id
+  name    = "${var.name}-postgres"
+  wait    = true
+  restart = var.restart
 
   volumes {
     container_path = "/var/lib/postgresql/data"
