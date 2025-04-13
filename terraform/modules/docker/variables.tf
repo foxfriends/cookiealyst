@@ -32,3 +32,8 @@ variable "data_dir" {
   default  = null
   nullable = true
 }
+
+variable "restart" {
+  type    = string
+  default = "unless-stopped"
+}

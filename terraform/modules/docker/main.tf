@@ -30,8 +30,9 @@ resource "docker_image" "cookiealyst" {
 }
 
 resource "docker_container" "cookiealyst" {
-  image = docker_image.cookiealyst.image_id
-  name  = var.name
+  image   = docker_image.cookiealyst.image_id
+  name    = var.name
+  restart = var.restart
 
   ports {
     internal = 3000
