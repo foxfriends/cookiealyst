@@ -15,6 +15,8 @@ resource "docker_container" "load" {
   attach   = true
   must_run = false
 
+  network_mode = "bridge"
+
   networks_advanced {
     name = docker_network.internal.name
   }
@@ -22,6 +24,7 @@ resource "docker_container" "load" {
   volumes {
     container_path = "/load"
     host_path      = var.data_dir
+    read_only      = true
   }
 
   env = [

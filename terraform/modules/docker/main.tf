@@ -38,6 +38,8 @@ resource "docker_container" "cookiealyst" {
     internal = 3000
   }
 
+  network_mode = "bridge"
+
   networks_advanced {
     name = docker_network.internal.name
   }

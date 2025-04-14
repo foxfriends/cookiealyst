@@ -13,6 +13,9 @@ resource "docker_container" "migrate" {
   attach   = true
   must_run = false
 
+
+  network_mode = "bridge"
+
   networks_advanced {
     name = docker_network.internal.name
   }

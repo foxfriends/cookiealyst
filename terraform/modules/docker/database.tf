@@ -20,7 +20,10 @@ resource "docker_container" "postgres" {
   volumes {
     container_path = "/var/lib/postgresql/data"
     volume_name    = docker_volume.postgres_data.name
+    read_only      = false
   }
+
+  network_mode = "bridge"
 
   networks_advanced {
     name    = docker_network.internal.name
