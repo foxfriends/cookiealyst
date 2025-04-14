@@ -4,18 +4,18 @@ COPY ./package.json ./package-lock.json .
 RUN npm ci
 COPY tsconfig.json ./
 COPY ./src/ ./src/
-ENTRYPOINT ["false"]
+CMD ["false"]
 
 
 FROM source AS load
-ENTRYPOINT ["npx", "tsx", "./src/scripts/load-cookies.ts", "/load/cookies.toml"]
+CMD ["npx", "tsx", "./src/scripts/load-cookies.ts", "/load/cookies.toml"]
 
 
 FROM source AS migrate
 COPY ./.gmrc .gmrc
 COPY ./migrations/committed/ ./migrations/committed/
 ENV CI=true
-ENTRYPOINT ["npx", "graphile-migrate", "migrate"]
+CMD ["npx", "graphile-migrate", "migrate"]
 
 
 FROM source AS build
@@ -37,4 +37,4 @@ COPY --from=build /app/build/ ./
 ENV PORT=3000
 EXPOSE $PORT
 
-ENTRYPOINT ["node", "index.js"]
+CMD ["node", "index.js"]
