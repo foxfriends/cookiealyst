@@ -9,3 +9,4 @@ eslint*
 /generated/
 /node_modules/
 README.md
+/terraform/
