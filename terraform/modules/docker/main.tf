@@ -38,6 +38,12 @@ resource "docker_container" "cookiealyst" {
     internal = 3000
   }
 
+  volumes {
+    container_path = "/app/static/images"
+    host_path      = var.images_dir
+    read_only      = true
+  }
+
   network_mode = "bridge"
 
   networks_advanced {

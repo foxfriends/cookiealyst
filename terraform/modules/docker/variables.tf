@@ -33,6 +33,10 @@ variable "data_dir" {
   nullable = true
 }
 
+variable "images_dir" {
+  type     = string
+}
+
 variable "restart" {
   type    = string
   default = "unless-stopped"
