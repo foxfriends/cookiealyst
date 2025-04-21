@@ -34,7 +34,7 @@ variable "data_dir" {
 }
 
 variable "images_dir" {
-  type     = string
+  type = string
 }
 
 variable "restart" {
