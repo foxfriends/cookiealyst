@@ -53,3 +53,7 @@ variable "data_dir" {
   default  = null
   nullable = true
 }
+
+variable "images_dir" {
+  type = string
+}
