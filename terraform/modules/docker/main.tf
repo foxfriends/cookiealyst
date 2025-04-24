@@ -18,6 +18,7 @@ locals {
   database_name = "cookiealyst"
   database_user = "cookiealyst"
   database_url  = "postgresql://${local.database_user}:${random_password.postgres_password.result}@postgres:5432/${local.database_name}"
+  internal_port = 3000
 }
 
 data "docker_registry_image" "cookiealyst" {
@@ -34,8 +35,13 @@ resource "docker_container" "cookiealyst" {
   name    = var.name
   restart = var.restart
 
-  ports {
-    internal = 3000
+  dynamic "ports" {
+    for_each = var.expose ? [var.port] : []
+
+    content {
+      internal = local.internal_port
+      external = ports.value
+    }
   }
 
   network_mode = "bridge"
@@ -44,12 +50,17 @@ resource "docker_container" "cookiealyst" {
     name = docker_network.internal.name
   }
 
-  networks_advanced {
-    name = data.docker_network.bridge.name
+  dynamic "ports" {
+    for_each = var.expose ? [var.port] : []
+
+    content {
+      internal = local.internal_port
+      external = ports.value
+    }
   }
 
   healthcheck {
-    test         = ["CMD", "curl", "-f", "localhost:3000/health"]
+    test         = ["CMD", "curl", "-f", "localhost:${local.internal_port}/health"]
     interval     = "5s"
     retries      = 2
     start_period = "1s"
@@ -58,7 +69,7 @@ resource "docker_container" "cookiealyst" {
 
   env = [
     "DATABASE_URL=${local.database_url}",
-    "PORT=3000",
+    "PORT=${local.internal_port}",
   ]
 
   depends_on = [
