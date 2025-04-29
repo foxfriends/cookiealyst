@@ -7,6 +7,11 @@ resource "docker_image" "load" {
   pull_triggers = [data.docker_registry_image.load.sha256_digest]
 }
 
+resource "terraform_data" "data_dir_contents" {
+  count = var.data_dir != null ? fileexists("${var.data_dir}/cookies.toml") ? 1 : 0 : 0
+  input = filesha1("${var.data_dir}/cookies.toml")
+}
+
 resource "docker_container" "load" {
   count = var.data_dir != null ? fileexists("${var.data_dir}/cookies.toml") ? 1 : 0 : 0
 
@@ -31,5 +36,13 @@ resource "docker_container" "load" {
     "DATABASE_URL=${local.database_url}",
   ]
 
-  depends_on = [docker_container.migrate]
+  depends_on = [
+    docker_container.migrate,
+  ]
+
+  lifecycle {
+    replace_triggered_by = [
+      terraform_data.data_dir_contents,
+    ]
+  }
 }
