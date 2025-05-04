@@ -35,6 +35,9 @@ resource "docker_container" "cookiealyst" {
   name    = var.name
   restart = var.restart
 
+  log_driver = var.log_driver
+  log_opts   = var.log_opts
+
   dynamic "ports" {
     for_each = var.expose ? [var.port] : []
 
