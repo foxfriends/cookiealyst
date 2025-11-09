@@ -1,5 +1,5 @@
 import { redirect } from "@sveltejs/kit";
 
 export async function GET() {
-  redirect(303, "/2024");
+  redirect(303, "/2025");
 }

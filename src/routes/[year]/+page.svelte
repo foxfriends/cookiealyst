@@ -71,72 +71,74 @@
         <Title>Tasting Menu {data.year}</Title>
       </header>
 
-      <div class="cast">
-        {#if data.rankings.length}
-          <p>thank you for voting.</p>
-          <Link href="/{data.year}/rankings">View all rankings <Icon>east</Icon></Link>
-        {/if}
-
-        {#if !data.account}
-          <form
-            action="/login"
-            class="cast"
-            method="POST"
-            use:enhance={() =>
-              async ({ result }) =>
-                applyAction(result)}
-          >
-            <input type="hidden" value="/{data.year}" name="to" />
-            <label for="account_id_2">
-              <Prompt>Enter your name to rank and review</Prompt>
-            </label>
-            <div class="field">
-              <Input id="account_id_2" name="account_id" placeholder="NAME" required />
-              <Button compact>Sign in</Button>
-            </div>
-            {#if form?.action === "login" && form.message}
-              <Error>
-                {form.message}
-              </Error>
-            {/if}
-          </form>
-        {:else}
-          <Button onclick={showVoteCaster} disabled={!data.account}>
-            {#if data.rankings.length}Change your votes{:else}Cast your votes{/if}
-          </Button>
-        {/if}
-      </div>
-
-      <div class="list-area">
-        <div class="controls">
-          {#if !data.rankings.length}
-            <Prompt>You can see the global rankings after voting.</Prompt>
+      {#if data.cookies.length}
+        <div class="cast">
+          {#if data.rankings.length}
+            <p>thank you for voting.</p>
+            <Link href="/{data.year}/rankings">View all rankings <Icon>east</Icon></Link>
           {/if}
-          <Button onclick={nextOrdering} disabled={!data.rankings.length}>
-            <div class="ordering">
-              {#if ordering === "personal"}
-                <Icon>person</Icon> Personal rank
-              {:else if ordering === "public"}
-                <Icon>public</Icon> Public rank
-              {:else}
-                <Icon>list</Icon> Default
+
+          {#if !data.account}
+            <form
+              action="/login"
+              class="cast"
+              method="POST"
+              use:enhance={() =>
+                async ({ result }) =>
+                  applyAction(result)}
+            >
+              <input type="hidden" value="/{data.year}" name="to" />
+              <label for="account_id_2">
+                <Prompt>Enter your name to rank and review</Prompt>
+              </label>
+              <div class="field">
+                <Input id="account_id_2" name="account_id" placeholder="NAME" required />
+                <Button compact>Sign in</Button>
+              </div>
+              {#if form?.action === "login" && form.message}
+                <Error>
+                  {form.message}
+                </Error>
               {/if}
-              <Icon>keyboard_arrow_down</Icon>
-            </div>
-          </Button>
-        </div>
-        <div role="list" class="list-grid">
-          {#each orderedCookies as cookie (cookie.id)}
-            <CookieInfo
-              {cookie}
-              personalRank={rankedIds.indexOf(cookie.id) + 1}
-              publicRank={data.publicRanking.indexOf(cookie.id) + 1}
-            />
+            </form>
           {:else}
-            <div>The cookies are not yet made.</div>
-          {/each}
+            <Button onclick={showVoteCaster} disabled={!data.account}>
+              {#if data.rankings.length}Change your votes{:else}Cast your votes{/if}
+            </Button>
+          {/if}
         </div>
-      </div>
+
+        <div class="list-area">
+          <div class="controls">
+            {#if !data.rankings.length}
+              <Prompt>You can see the global rankings after voting.</Prompt>
+            {/if}
+            <Button onclick={nextOrdering} disabled={!data.rankings.length}>
+              <div class="ordering">
+                {#if ordering === "personal"}
+                  <Icon>person</Icon> Personal rank
+                {:else if ordering === "public"}
+                  <Icon>public</Icon> Public rank
+                {:else}
+                  <Icon>list</Icon> Default
+                {/if}
+                <Icon>keyboard_arrow_down</Icon>
+              </div>
+            </Button>
+          </div>
+          <div role="list" class="list-grid">
+            {#each orderedCookies as cookie (cookie.id)}
+              <CookieInfo
+                {cookie}
+                personalRank={rankedIds.indexOf(cookie.id) + 1}
+                publicRank={data.publicRanking.indexOf(cookie.id) + 1}
+              />
+            {/each}
+          </div>
+        </div>
+      {:else}
+        <div class="placeholder">The cookies are not yet made.</div>
+      {/if}
     </div>
   </Sheet>
 </main>
@@ -196,5 +198,13 @@
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  .placeholder {
+    font-size: 1.5rem;
+    padding-top: 2rem;
+    text-transform: lowercase;
+    text-align: center;
+    opacity: 0.5;
   }
 </style>
