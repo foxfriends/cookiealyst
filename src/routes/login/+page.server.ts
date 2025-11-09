@@ -12,10 +12,15 @@ export const actions: Actions = {
     if (!account_id) return fail(400, { error: "Your name is required" });
 
     try {
-      const created = await locals.database.one<Pick<Account, "id">>(
-        sql.query`INSERT INTO accounts (id) VALUES (${sql.value(account_id)}) ON CONFLICT DO NOTHING RETURNING id`,
-      );
-      locals.account = account_id;
+      const account =
+        (await locals.database.one<Pick<Account, "id">>(
+          sql.query`SELECT id FROM accounts WHERE id = ${sql.value(account_id)}`,
+        )) ??
+        (await locals.database.one<Pick<Account, "id">>(
+          sql.query`INSERT INTO accounts (id) VALUES (${sql.value(account_id)}) RETURNING id`,
+        ));
+      if (!account) throw new TypeError("Account not found or created");
+      locals.account = account.id;
     } catch (error) {
       if (
         error instanceof pg.DatabaseError &&
@@ -24,7 +29,10 @@ export const actions: Actions = {
       ) {
         return fail(400, { action: "login" as const, message: "Name is too long" });
       }
-      return fail(500, { action: "login" as const, message: "Something went wrong" });
+      return fail(500, {
+        action: "login" as const,
+        message: (error as Error).message ?? "Something went wrong",
+      });
     }
     redirect(303, to);
   },
