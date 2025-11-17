@@ -4,9 +4,9 @@ import type { PageServerLoadEvent, Actions } from "./$types";
 import sql from "pg-sql2";
 import pg from "pg";
 import { getPublicRanking } from "$lib/publicRanking";
-import { ACTIVE_YEAR } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 
-const activeYear = Number.parseInt(ACTIVE_YEAR);
+const activeYear = Number.parseInt(env.ACTIVE_YEAR);
 
 export async function load(event: PageServerLoadEvent) {
   const { cookieId } = event.params;

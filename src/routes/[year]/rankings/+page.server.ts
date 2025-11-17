@@ -3,9 +3,9 @@ import sql from "pg-sql2";
 import type { PageServerLoadEvent } from "./$types";
 import { error } from "@sveltejs/kit";
 import { getPublicRanking } from "$lib/publicRanking";
-import { ACTIVE_YEAR } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 
-const activeYear = Number.parseInt(ACTIVE_YEAR);
+const activeYear = Number.parseInt(env.ACTIVE_YEAR);
 
 export async function load(event: PageServerLoadEvent) {
   const year = Number.parseInt(event.params.year);
