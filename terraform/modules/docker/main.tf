@@ -79,6 +79,7 @@ resource "docker_container" "cookiealyst" {
   env = [
     "DATABASE_URL=${local.database_url}",
     "PORT=${local.internal_port}",
+    "ACTIVE_YEAR=${var.active_year}",
   ]
 
   depends_on = [

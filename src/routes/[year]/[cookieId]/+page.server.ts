@@ -4,11 +4,15 @@ import type { PageServerLoadEvent, Actions } from "./$types";
 import sql from "pg-sql2";
 import pg from "pg";
 import { getPublicRanking } from "$lib/publicRanking";
+import { ACTIVE_YEAR } from "$env/static/private";
+
+const activeYear = Number.parseInt(ACTIVE_YEAR);
 
 export async function load(event: PageServerLoadEvent) {
   const { cookieId } = event.params;
   const year = Number.parseInt(event.params.year);
   if (Number.isNaN(year)) error(404, "Cookie not found");
+  const isVoteActive = year === activeYear;
 
   const cookie = await event.locals.database.one<Cookie>(
     sql.query`SELECT * FROM cookies WHERE id = ${sql.value(cookieId)} AND year = ${sql.value(year)}`,
@@ -37,25 +41,23 @@ export async function load(event: PageServerLoadEvent) {
     }));
   }
 
-  let rankings: Ranking[] = [];
-  let publicRanking: string[] = [];
-
-  if (event.locals.account) {
-    const allRankings = await event.locals.database.many<Ranking>(
-      sql.query`
+  const rankings: Ranking[] = await event.locals.database.many<Ranking>(
+    sql.query`
         SELECT *
           FROM rankings
           WHERE rankings.cookie_id = ${sql.value(cookieId)}
           AND rankings.year = ${sql.value(year)}
           ORDER BY created_at ASC
       `,
-    );
-    if (allRankings.some((rank) => rank.account_id === event.locals.account)) {
-      rankings = allRankings;
-      publicRanking = await getPublicRanking(event.locals.database, year);
-    }
+  );
+  if (
+    !isVoteActive ||
+    (event.locals.account && rankings.some((rank) => rank.account_id === event.locals.account))
+  ) {
+    const publicRanking = await getPublicRanking(event.locals.database, year);
+    return { cookie, year, rankings, publicRanking, isVoteActive };
   }
-  return { cookie, year, reviews, rankings, publicRanking };
+  return { cookie, year, rankings: [], publicRanking: [], reviews, isVoteActive };
 }
 
 export const actions: Actions = {

@@ -20,7 +20,7 @@
   let flakes: Flake[] = $state([]);
 
   $effect(() => {
-    resetter;
+    void resetter;
     if (!canvas) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -32,7 +32,6 @@
     const c2d = canvas.getContext("2d")!;
 
     let next = window.requestAnimationFrame(animateSnow);
-    let previousFrame: DOMHighResTimeStamp = 0;
     let previousSpawn: DOMHighResTimeStamp = 0;
 
     function spawn() {

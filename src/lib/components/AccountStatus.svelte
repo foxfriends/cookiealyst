@@ -1,12 +1,11 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { page } from "$app/stores";
-  import type { ActionData } from "../../routes/login/$types";
   import Button from "./Button.svelte";
   import Input from "./Input.svelte";
   import Prompt from "./Prompt.svelte";
 
-  const { account, form }: { account: string | null; form?: ActionData } = $props();
+  const { account }: { account: string | null } = $props();
 </script>
 
 <article class="account-status" role="status">

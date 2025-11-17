@@ -1,13 +1,8 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
   import type { Snippet } from "svelte";
-  import type { LayoutData } from "./$types";
-  import Button from "$lib/components/Button.svelte";
-  import Input from "$lib/components/Input.svelte";
-  import Prompt from "$lib/components/Prompt.svelte";
   import Snowflakes from "$lib/components/Snowflakes.svelte";
 
-  const { children, data }: { children: Snippet; data: LayoutData } = $props();
+  const { children }: { children: Snippet } = $props();
 </script>
 
 <div class="snowfall">

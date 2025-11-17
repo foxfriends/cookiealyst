@@ -14,7 +14,6 @@
   import Link from "$lib/components/Link.svelte";
   import AccountStatus from "$lib/components/AccountStatus.svelte";
   import Error from "$lib/components/Error.svelte";
-  import { onMount } from "svelte";
 
   const { data, form }: { data: PageData; form: ActionData | LoginActionData } = $props();
 
@@ -28,7 +27,10 @@
     voteCaster?.show();
   }
 
-  const orderings = ["default", "personal", "public"] as const;
+  type Ordering = "default" | "personal" | "public";
+  const orderings: Ordering[] = $derived(
+    data.account ? ["default", "personal", "public"] : ["default", "public"],
+  );
   let ordering: (typeof orderings)[number] = $state("default");
   $effect(() => {
     if (!data.account) ordering = "default";
@@ -75,6 +77,8 @@
         <div class="cast">
           {#if data.rankings.length}
             <p>thank you for voting.</p>
+          {/if}
+          {#if data.publicRanking.length}
             <Link href="/{data.year}/rankings">View all rankings <Icon>east</Icon></Link>
           {/if}
 
@@ -89,7 +93,13 @@
             >
               <input type="hidden" value="/{data.year}" name="to" />
               <label for="account_id_2">
-                <Prompt>Enter your name to rank and review</Prompt>
+                <Prompt>
+                  {#if data.isVoteActive}
+                    Enter your name to rank and review
+                  {:else}
+                    Enter your name to review your past rankings
+                  {/if}
+                </Prompt>
               </label>
               <div class="field">
                 <Input id="account_id_2" name="account_id" placeholder="NAME" required />
@@ -101,7 +111,7 @@
                 </Error>
               {/if}
             </form>
-          {:else}
+          {:else if data.isVoteActive}
             <Button onclick={showVoteCaster} disabled={!data.account}>
               {#if data.rankings.length}Change your votes{:else}Cast your votes{/if}
             </Button>
@@ -110,10 +120,10 @@
 
         <div class="list-area">
           <div class="controls">
-            {#if !data.rankings.length}
+            {#if data.isVoteActive && !data.rankings.length}
               <Prompt>You can see the global rankings after voting.</Prompt>
             {/if}
-            <Button onclick={nextOrdering} disabled={!data.rankings.length}>
+            <Button onclick={nextOrdering} disabled={data.isVoteActive && !data.rankings.length}>
               <div class="ordering">
                 {#if ordering === "personal"}
                   <Icon>person</Icon> Personal rank

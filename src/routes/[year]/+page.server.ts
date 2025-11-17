@@ -5,10 +5,15 @@ import type { PageServerLoadEvent, Actions } from "./$types";
 import qs from "qs";
 import { error, fail } from "@sveltejs/kit";
 import { getPublicRanking } from "$lib/publicRanking";
+import { ACTIVE_YEAR } from "$env/static/private";
+
+const activeYear = Number.parseInt(ACTIVE_YEAR);
 
 export async function load(event: PageServerLoadEvent) {
   const year = Number.parseInt(event.params.year);
   if (Number.isNaN(year)) error(404, "Cookies not found");
+  const isVoteActive = year === activeYear;
+
   const cookies = await event.locals.database.many<Cookie>(
     sql.query`SELECT * FROM cookies WHERE year = ${sql.value(year)} ORDER BY ordering ASC`,
   );
@@ -19,11 +24,17 @@ export async function load(event: PageServerLoadEvent) {
     rankings = await event.locals.database.many<Ranking>(
       sql.query`SELECT * FROM rankings WHERE year = ${sql.value(year)} AND account_id = ${sql.value(event.locals.account)}`,
     );
-    if (rankings.length) {
-      publicRanking = await getPublicRanking(event.locals.database, year);
-    }
   }
-  return { cookies, year, rankings, publicRanking };
+  if (!isVoteActive || rankings.length) {
+    publicRanking = await getPublicRanking(event.locals.database, year);
+  }
+  return {
+    cookies,
+    year,
+    rankings,
+    publicRanking,
+    isVoteActive,
+  };
 }
 
 export const actions: Actions = {
@@ -31,6 +42,9 @@ export const actions: Actions = {
     if (!account) return fail(403, { action: "vote" as const, message: "Not logged in" });
     const year = Number.parseInt(params.year);
     if (Number.isNaN(year)) return fail(400, { action: "vote" as const, message: "Invalid year" });
+    if (year !== activeYear) {
+      return fail(400, { action: "vote" as const, message: "Voting for this year has completed" });
+    }
 
     const cookies = await database.many<Cookie>(
       sql.query`SELECT * FROM cookies WHERE year = ${sql.value(year)}`,

@@ -12,7 +12,7 @@
   import AccountStatus from "$lib/components/AccountStatus.svelte";
 
   const { data }: { data: PageData } = $props();
-  const { cookie, year, reviews, account, rankings, publicRanking } = $derived(data);
+  const { cookie, year, reviews, account, rankings, publicRanking, isVoteActive } = $derived(data);
 </script>
 
 <svelte:head>
@@ -53,13 +53,15 @@
 
       <hr />
 
-      <form action="?/review" method="POST" use:enhance>
-        <textarea name="comment" rows={4} placeholder="Leave a review"></textarea>
-        <div class="actions">
-          {#if !account}<p class="note">You must be signed in to leave a review</p>{/if}
-          <Button disabled={!account}>Submit</Button>
-        </div>
-      </form>
+      {#if isVoteActive}
+        <form action="?/review" method="POST" use:enhance>
+          <textarea name="comment" rows={4} placeholder="Leave a review"></textarea>
+          <div class="actions">
+            {#if !account}<p class="note">You must be signed in to leave a review</p>{/if}
+            <Button disabled={!account}>Submit</Button>
+          </div>
+        </form>
+      {/if}
 
       {#each reviews as review}
         <Review {review} {account} {rankings} />

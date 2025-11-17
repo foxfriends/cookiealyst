@@ -67,3 +67,7 @@ variable "data_dir" {
 variable "images_dir" {
   type = string
 }
+
+variable "active_year" {
+  type = number
+}
