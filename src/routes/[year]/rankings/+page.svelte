@@ -25,7 +25,7 @@
 
     <div class="page">
       <nav>
-        <Link href="/"><Icon>west</Icon> Tasting Menu 2024</Link>
+        <Link href="/{year}"><Icon>west</Icon> Tasting Menu 2024</Link>
       </nav>
 
       <header>
