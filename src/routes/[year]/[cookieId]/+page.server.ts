@@ -55,7 +55,7 @@ export async function load(event: PageServerLoadEvent) {
     (event.locals.account && rankings.some((rank) => rank.account_id === event.locals.account))
   ) {
     const publicRanking = await getPublicRanking(event.locals.database, year);
-    return { cookie, year, rankings, publicRanking, isVoteActive };
+    return { cookie, year, rankings, reviews, publicRanking, isVoteActive };
   }
   return { cookie, year, rankings: [], publicRanking: [], reviews, isVoteActive };
 }
