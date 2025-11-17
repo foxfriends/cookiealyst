@@ -28,7 +28,7 @@
 
     <div class="page">
       <nav>
-        <Link href="/{year}"><Icon>west</Icon> Tasting Menu 2024</Link>
+        <Link href="/{year}"><Icon>west</Icon> Tasting Menu {year}</Link>
       </nav>
 
       <InfoSection {cookie} />
