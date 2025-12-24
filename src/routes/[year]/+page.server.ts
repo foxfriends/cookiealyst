@@ -93,7 +93,7 @@ export const actions: Actions = {
     try {
       await database.transaction(async () => {
         await database.query(
-          sql.query`DELETE FROM rankings WHERE account_id = ${sql.value(account)}`,
+          sql.query`DELETE FROM rankings WHERE account_id = ${sql.value(account)} AND year = ${sql.value(year)}`,
         );
         await database.query(
           sql.query`INSERT INTO rankings (account_id, cookie_id, year, ranking) VALUES ${rankings}`,
