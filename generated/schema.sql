@@ -2,8 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.5 (Debian 17.5-1.pgdg120+1)
--- Dumped by pg_dump version 17.5 (Debian 17.5-1.pgdg120+1)
+\restrict pZ2gfkQGuF0b11S8IVUjKcvqsPZ2I4GWCdmaVcYc0uLYm13aFRpZXRcvnUEHSVu
+
+-- Dumped from database version 17.7 (Debian 17.7-3.pgdg13+1)
+-- Dumped by pg_dump version 17.7 (Debian 17.7-3.pgdg13+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -124,7 +126,7 @@ CREATE TABLE public.reviews (
     id bigint NOT NULL,
     account_id public.citext NOT NULL,
     cookie_id text NOT NULL,
-    comment text,
+    comment text NOT NULL,
     year integer NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT comment_max_length CHECK ((length(comment) <= 2048))
@@ -288,4 +290,6 @@ ALTER TABLE ONLY public.sessions
 --
 -- PostgreSQL database dump complete
 --
+
+\unrestrict pZ2gfkQGuF0b11S8IVUjKcvqsPZ2I4GWCdmaVcYc0uLYm13aFRpZXRcvnUEHSVu
 

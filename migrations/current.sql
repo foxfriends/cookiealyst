@@ -1,1 +1,1 @@
--- Enter migration here
+ALTER TABLE reviews ALTER COLUMN "comment" SET NOT NULL;
