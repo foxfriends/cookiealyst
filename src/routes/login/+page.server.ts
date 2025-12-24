@@ -8,7 +8,7 @@ export const actions: Actions = {
     if (locals.account) error(409, "Already signed in");
     const data = await request.formData();
     const to = data.get("to")?.toString() ?? "/";
-    const account_id = data.get("account_id")?.toString() ?? null;
+    const account_id = data.get("account_id")?.toString().trim() ?? null;
     if (!account_id) return fail(400, { error: "Your name is required" });
 
     try {
