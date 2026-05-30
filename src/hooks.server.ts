@@ -42,7 +42,11 @@ export async function handle({ event, resolve }: Parameters<Handle>[0]) {
     return await resolve(event);
   } finally {
     try {
-      if (event.locals.account !== session.account_id) {
+      if (event.locals.account === null) {
+        await event.locals.database.one<Session>(
+          sql.query`DELETE FROM sessions WHERE id = ${sql.value(session.id)}`,
+        );
+      } else if (event.locals.account !== session.account_id) {
         await event.locals.database.one<Session>(
           sql.query`
             UPDATE sessions
