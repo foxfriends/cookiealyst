@@ -1,4 +1,4 @@
-FROM node:22.14.0 AS source
+FROM node:22.23.4 AS source
 WORKDIR /app/
 COPY ./package.json ./package-lock.json ./svelte.config.js .
 RUN npm ci
@@ -27,7 +27,7 @@ ENV ENV=production
 RUN npm run build
 
 
-FROM node:22.14.0 AS release
+FROM node:22.23.4 AS release
 WORKDIR /app/
 
 ENV NODE_ENV=production
